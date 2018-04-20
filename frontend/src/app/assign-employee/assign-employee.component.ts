@@ -22,7 +22,6 @@ export class AssignEmployeeComponent implements OnInit {
   constructor(private route: ActivatedRoute, private _user:UserService, private _router:Router) {
       this._user.showEmployee()
     .subscribe(
-
       data=>{
         debugger
       console.log(data); this.users=data['data'];},

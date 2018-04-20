@@ -22,7 +22,13 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class FilterArray implements PipeTransform {
   transform(items:any[], searchText: string): any[] {
     debugger
+    name:any[]=[];
     if(!items) return [{}] ;
+    for(let i=0;i<items.length;i++){
+      for(let j=0;j<items.length;j++){
+     this.name.push(items[i][j])
+    }
+  }
     if(!searchText) return items;
     searchText = searchText.toLowerCase();
     return items.filter( it => {
