@@ -1,0 +1,50 @@
+<div class="container">
+  <div class="card " id="box">
+    <div class="card-header bg-primary text-white text-center"><h2>Add Project</h2> </div>
+    <div class="card-body">
+      <form [formGroup]="addTaskForm" method="post">
+        <div class="row">
+          <div class="form-group col-sm-8">
+            <label for="title"> Title</label>
+            <input type="text" class="form-control" formControlName="title" >
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-sm-8" >
+          <label for="des"> Description </label>  <textarea class="form-control" formControlName="des" row="4" cols="15"></textarea> 
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-sm-8">
+            <label for ="cname">Client Name: </label>  <input type="text" class="form-control"formControlName="cname">
+            </div>
+          </div>
+           <div class="row">
+            <div class="form-group col-sm-8">
+            <label>Type :</label> &nbsp;
+            <input type="radio"  name="type" value="Full Time" formControlName="type">Full Time &nbsp;
+            <input type="radio" name="type"  value="Part Time" formControlName="type">Part Time
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-sm-8">
+            <label for ="tech" >Technology used </label>  <br>
+            <div *ngFor="let data of skills">
+              <input name ="tech" type="checkbox" (change)="onChange(data.skills, $event.target.checked)"> {{data.skills}}<br>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-sm-8">
+            <label for ="image">Upload Image</label>
+            <input type="file" class="form-control" (change)="fileChangeEvent($event)"  id="file">
+            <img src="{{url}}" height="150px"><br>
+            <button type="button" class="btn btn-success btn-s " (click)="upload()">
+              <i class="glyphicon glyphicon-open-file"></i>Submit
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

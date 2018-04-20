@@ -1,0 +1,23 @@
+<div class="container">
+  <div class="card " id="box">
+    <div class="card-header bg-primary text-white text-center"><h2>Edit User</h2> </div>
+    <div class="card-body">
+     <form [formGroup]="editForm" method="post">
+        <div class="row">
+          <div class="form-group col-sm-8">
+            Username: <input type="text" formControlName="username" [(ngModel)]="user.username">
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-sm-8">
+            Type :
+            <input type="radio"  name="type" value="manager" formControlName="type" >Manager
+            <input type="radio" name="type" value="employee" formControlName="type">Employee
+          </div>
+        </div>
+        <input type=submit value=submit  (click)="edit(id)">
+      </form>
+    </div>
+  </div>
+</div>
+      

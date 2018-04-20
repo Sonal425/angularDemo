@@ -1,0 +1,29 @@
+<div>
+  <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+    <div class="container">
+      <ul class="nav navbar-nav">
+        <li><a [routerLink]="['/register']">Register</a></li>
+      </ul>
+    </div>
+  </nav>
+</div>
+<div class="container">
+  <div class="card " id="box">
+    <div class="card-header bg-primary text-white text-center"><h2>Login</h2> </div>
+    <div class="card-body">
+      <form [formGroup]="loginForm" method="post">
+        <div class="row">
+          <div class="form-group col-sm-8">
+           Username: <input type="text" formControlName="username">
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-sm-8" >
+            Password: <input type="password" formControlName="password">
+          </div>
+        </div>
+        <input type=submit value=submit class="btn btn-primary btn-block align-center" (click)="login()">
+      </form>
+    </div>
+  </div>
+</div>

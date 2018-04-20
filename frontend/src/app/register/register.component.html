@@ -1,0 +1,60 @@
+<div>
+  <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+    <div class="container">
+      <ul class="nav navbar-nav">
+        <li><a [routerLink]="['/login']">Login</a></li>
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<div class="container">
+  <div class="card " id="box">
+    <div class="card-header bg-primary text-white text-center"><h2>Registration Form</h2>
+    </div>
+    <div class="card-body">
+      <form [formGroup]="registerForm" method="post">
+        <div class="row">
+          <div class="form-group col-sm-8"> 
+            Enter Name: <input type="text"  formControlName="name">
+            </div>
+          </div>
+          <div class="row">
+           <div class="form-group col-sm-8">
+              Enter username :<input type="text" formControlName="username">
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-sm-8">
+              Enter email address:<input type="email" formControlName="email">
+             </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-sm-8">
+              Enter password <input type="password" formControlName="password">
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-sm-8">
+            Confirm password <input type="password" formControlName="cpass"><br>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-sm-8">
+            Type :
+            <input type="radio"  name="type" value="manager" formControlName="type" (click)="show='no'">Manager
+            <input type="radio" name="type" value="employee" formControlName="type" (click)="show='yes'" >Employee
+          </div>
+        </div>
+    
+         <div *ngIf="show=='yes'">
+          <div *ngFor="let data of skills">
+            <input name ="tech" type="checkbox" (change)="onChange(data.skills, $event.target.checked)"> {{data.skills}}<br>
+          </div>    
+        </div>
+        <input type=submit value=submit class="btn btn-primary btn-block align-center" id="submit" (click)="register()">
+      </form>
+    </div>
+  </div>
+</div>
+

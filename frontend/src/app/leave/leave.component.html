@@ -1,0 +1,39 @@
+<div class="container" id="box">
+  <h3 align="center"> Apply For leave</h3>
+   <form method="post">
+    <div class="row">
+      <div class="form-group col-sm-6" >
+        <h5><label for="leaveType"> Leave Type </label></h5>
+        <select [(ngModel)]="leaveType" class="form-control" name="leaveType">
+          <option> Casual</option>
+          <option> Loss of pay </option>
+          <option> Sick </option>
+          <option> Paid</option>
+        </select> 
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-sm-6" >
+        <h5><label for=" fromDate"> From </label></h5>
+        <input type="date" [(ngModel)]="fromDate " class="form-control" name="fromDate">
+      </div>
+    </div>
+     <div class="row">
+      <div class="form-group col-sm-6" >
+        <h5><label for=" toDate"> Till </label></h5>
+        <input type="date" [(ngModel)]="toDate" class="form-control" name="toDate">
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-sm-6" >
+        <h5><label for=" reason"> Reason </label></h5>
+        <textarea [(ngModel)]="reason" class="form-control" name="reason"> </textarea>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-sm-6" >
+        <button class="btn btn-primary"(click)="checkDate(fromDate,toDate)">Apply</button>
+      </div>
+    </div>
+  </form>
+</div>

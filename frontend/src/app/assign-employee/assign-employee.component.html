@@ -1,0 +1,33 @@
+<input type="text" [(ngModel)]="searchText">
+<button> Ok</button>
+<ul>
+  <li *ngFor="let c of characters | filter : searchText">
+    {{c}}
+  </li>
+</ul>
+<div class="container">
+  <table class="table ">
+    <thead class="thead-dark">
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Technology</th>
+        <th>Option</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor= "let details of users ">
+        <td>{{details.name }}</td>
+        <td>{{details.email}}</td>
+        <td>
+          <ul *ngFor= "let tech of details.technology | filter : searchText ">
+            <li>{{tech }}</li>
+          </ul>
+        </td>
+        <td >
+          <button class="btn btn-primary">Assign</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

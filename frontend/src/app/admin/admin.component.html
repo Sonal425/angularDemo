@@ -1,0 +1,26 @@
+<input type=submit value=logout class="btn btn-primary  align-right" id="submit" (click)="logout()">
+<div class="container">
+  <table class="table ">
+      <thead class="thead-dark">
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Username</th>
+          <th>Type</th>
+          <th>Option</th>
+        </tr>
+      </thead>
+       <tbody>
+        <tr *ngFor= "let details of users" >
+          <td>{{details.name}}</td>
+          <td>{{details.email}}</td>
+          <td>{{details.username}}</td>
+          <td>{{details.type}}</td>  
+          <td >
+            <button class="btn btn-danger" (click)="delete(details._id, details.username)">Delete</button>
+            <a [routerLink]="['/edit', details._id]" class="btn btn-success">EDIT</a>  
+         </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

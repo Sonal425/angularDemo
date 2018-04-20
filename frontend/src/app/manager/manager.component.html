@@ -1,0 +1,34 @@
+<input type=submit value=logout class="btn btn-primary  align-right" id="submit" (click)="logout()">
+<a [routerLink]="['/addTask']" class="btn btn-success">Add Project</a>  
+<div class="container">
+  <table class="table ">
+      <thead class="thead-dark">
+        <tr>
+          <th>Title</th>
+          <th>Description</th>
+          <th> Client Name</th>
+          <th>Type</th>
+          <th>Technology</th>
+          <th>Image</th>
+          <th>Option</th>
+        </tr>
+      </thead>
+       <tbody>
+        <tr *ngFor= "let details of project" >
+          <td>{{details.title}}</td>
+          <td>{{details.description}}</td>
+          <td>{{details.clientName}}</td>
+          <td>{{details.type}}</td>  
+          <td><ul *ngFor= "let tech of details.technology ">
+            <li>{{tech}}</li>
+          </ul>
+        </td>
+          <td><img src="../assets/images/{{details.image}}" height="100">
+          </td>
+          <td > 
+            <a [routerLink]="['/assignEmployee', details._id]" class="btn btn-success">Assign</a>  
+         </td> 
+      </tr>
+    </tbody>
+  </table>
+</div>
