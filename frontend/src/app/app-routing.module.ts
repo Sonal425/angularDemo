@@ -30,17 +30,17 @@ const routes: Routes = [
   // canActivate: [notloggedIn]
   },
  {
-  path:'admin',
+  path:'admin/:id',
   component: AdminComponent,
   // canActivate: [loggedIn]
   },
    {
-  path:'employee',
+  path:'employee/:id',
   component: EmployeeComponent,
   // canActivate: [loggedIn]
   },
    {
-  path:'manager',
+  path:'manager/:id',
   component: ManagerComponent,
   // canActivate: [loggedIn]
   },

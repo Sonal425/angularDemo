@@ -83,4 +83,27 @@ export class UserService {
       headers:new HttpHeaders().append('Content-Type','application/json')
     })
   }
+  assign(projectid:any,employeeid:any){
+     return this._http.post('http://127.0.0.1:3000/userApi/assignProject',{
+      params:{employeeid:employeeid, projectid:projectid},
+      observe:'body',
+      headers:new HttpHeaders().append('Content-Type','application/json')
+    });
+  }
+  getAssignedProject(id:any){
+    return this._http.get('http://127.0.0.1:3000/userApi/getAssignedProject/'+id,{
+      observe:'body',
+      withCredentials:true,
+      headers:new HttpHeaders().append('Content-Type','application/json')
+    });
+  }
+  showAssignedProject(id:any){
+    return this._http.get('http://127.0.0.1:3000/userApi/showAssignedProject',{
+      params:{ projectid : id},
+      observe:'body',
+      withCredentials:true,
+      headers:new HttpHeaders().append('Content-Type','application/json')
+    });
+  }
+
 }

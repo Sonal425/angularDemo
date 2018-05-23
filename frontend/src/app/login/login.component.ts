@@ -23,9 +23,10 @@ export class LoginComponent implements OnInit {
   login(){
     this._user.login(JSON.stringify(this.loginForm.value))
     .subscribe(
-      data=>{
-      this._router.navigate(['/'+data["user"]['type']]);
+      data=>{  
       this._user.isLoggedIn=true;
+      console.log(data);
+      this._router.navigate(['/'+data["user"]['type']+"/"+data["user"]['_id']]);
     } ,
       error=>console.error(error)
     )

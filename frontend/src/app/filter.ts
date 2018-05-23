@@ -20,19 +20,34 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'filter'
 })
 export class FilterArray implements PipeTransform {
-  transform(items:any[], searchText: string): any[] {
-    debugger
-    name:any[]=[];
+  name=[];
+  transform(items:any[], searchText: string):any[] {
     if(!items) return [{}] ;
     for(let i=0;i<items.length;i++){
-      for(let j=0;j<items.length;j++){
-     this.name.push(items[i][j])
+      this.name[i]=items[i]["name"];
     }
-  }
+    console.log(this.name)
+    debugger
     if(!searchText) return items;
     searchText = searchText.toLowerCase();
-    return items.filter( it => {
+    return this.name.filter( it => {
+       console.log(it);
       return it.toLowerCase().includes(searchText);
+
     });
-   }
+  }
 }
+// import { Pipe, PipeTransform } from '@angular/core';
+// @Pipe({
+//   name: 'filter'
+// })
+// export class FilterArray implements PipeTransform {
+//   transform(items: any[], searchText: string): any[] {
+//     if(!items) return [];
+//     if(!searchText) return items;
+//     searchText = searchText.toLowerCase();
+//     return items.filter( it => {
+//       return it.toLowerCase().includes(searchText);
+//     });
+//    }
+// }

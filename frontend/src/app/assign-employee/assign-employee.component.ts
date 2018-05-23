@@ -11,24 +11,39 @@ import { Pipe, PipeTransform} from '@angular/core';
 })
 export class AssignEmployeeComponent implements OnInit {
   users=[{}];
-  characters = [
-    'Finn the human',
-    'Jake the dog',
-    'Princess bubblegum',
-    'Lumpy Space Princess',
-    'Beemo1',
-    'Beemo2'
-  ]
-  constructor(private route: ActivatedRoute, private _user:UserService, private _router:Router) {
-      this._user.showEmployee()
+  name=[];
+  email=[];
+  projectid:any;
+  constructor(private route: ActivatedRoute, private _user:UserService, private router:Router) {
+    this._user.showEmployee()
     .subscribe(
       data=>{
-        debugger
-      console.log(data); this.users=data['data'];},
+        console.log(data); 
+        this.users=data['data'];
+        var count= Object.keys(this.users).length;
+        for(var i=0;i<this.users.length;i++){
+          this.name.push(this.users[i]['name']); 
+          this.email.push(this.users[i]['email']); 
+        }
+      },
       error=>console.log(error)
-      )
-   }
-  ngOnInit() {
+    )
   }
+  ngOnInit() {
+    this.projectid= this.route.snapshot.params['id'];
+  } 
+  assign(employeeid, name){
+    console.log(this.projectid+" "+employeeid)
+        if(confirm("Assign this project to "+name)) {
+      this._user.assign(this.projectid,employeeid)
+      .subscribe(
+        data => {
+          this.router.navigate(["/manager"]);},
+          (err) => {
+          console.log(err);
+        }
+      );
+    }  
 
+  }
 }
