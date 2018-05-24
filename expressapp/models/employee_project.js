@@ -2,9 +2,10 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var bcrypt = require('bcrypt');
+var ObjectId = mongoose.Schema.Types.ObjectId;
 
 var schema = new Schema({
-    projectId : {type:String, require:true},
+    projectId : {type:ObjectId, require:true},
     employeeId: {type:String, require:true}
 });
 

@@ -1,0 +1,69 @@
+<a [routerLink]="['/manager',id]" class="btn btn-primary">Back</a>  
+<button type="button" class="btn btn-info btn-md" data-toggle="modal" data-target="#leavehistory">Leave History</button>
+<div class="container">
+  <table class="table ">
+      <thead class="thead-dark container-fluid" >
+        <tr>
+          <th>Employee Id</th>
+          <th>Leave Type</th>
+          <th> From </th>
+          <th>Till</th>
+          <th>Applied On</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+       <tbody *ngFor= "let details of applications" >
+        <tr *ngIf="details.status=='unread'" >
+          <td>{{details. employeeId}}</td>
+          <td>{{details.leaveType}}</td>
+          <td>{{details.fromDate}} {{details.fromSession}} </td>
+          <td>{{details.toDate}} {{details.tillSession}} </td>
+          <td>{{details.appliedDate}}</td>  
+          <td > 
+            <button class="btn btn-success btn-sm" (click)='action("Approved",details._id)'>Approve</button>
+            <button class="btn btn-danger btn-sm" (click)='action("Rejected",details._id)' >Reject</button> 
+         </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div class="container-fluid">
+  <div class="modal fade" id="leavehistory" role="dialog">
+    <div class="modal-dialog  modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Leave Application History</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          
+        </div>
+        <div class="modal-body container">
+          <table class="table table-condensed">
+            <thead >
+              <tr>
+                <th>Employee Id</th>
+                <th>Leave Type</th>
+                <th> From </th>
+                <th>Till</th>
+                <th>Applied On</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody *ngFor= "let details of applications" >
+              <tr *ngIf="details.status!='unread'" >
+                <td>{{details. employeeId}}</td>
+                <td>{{details.leaveType}}</td>
+                <td>{{details.fromDate}} <br> {{details.fromSession}} </td>
+                <td>{{details.toDate}} <br>{{details.tillSession}} </td>
+                <td>{{details.appliedDate}}</td>  
+                <td> {{details.status}} </td>
+              </tr>
+           </tbody>    
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>     
+    </div>
+  </div>
+</div>

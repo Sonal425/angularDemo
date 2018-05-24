@@ -2,11 +2,13 @@ var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
 var Project = require('../models/project');
+var leave = require('../models/leave');
 var employee_project =require('../models/employee_project');
 var passport = require('passport');
 var mongoose = require('mongoose');
 var Promise = require('promise');
 var Q=require('q');
+
 router.post('/register', function (req, res, next) {
   addToDB(req, res);
 });
@@ -82,37 +84,97 @@ router.get('/showEmployee',function(req, res,next){
   });
 });
 
-router.post("/assignProject",function(req,res){
-  console.log(req)
-  assignProject(req,res);
-})
-
- async function showprojects(req,res,callback){
-  var projects=mongoose.model("employee_project");
-  projects.find({'employeeId':req.params.id},'projectId',async function(err,data){
-    var de=[],show;
+router.get('/showManager',function(req, res,next){
+  var emp = mongoose.model("User");
+  emp.find({ 'type': 'manager' }, 'name _id', function(err, data){ 
     if (err) return next(err);
-    for(let i=0; i<data.length;i++){
-    show= showProjectDetails(data[i]['projectId'])
-    de.push(show);
-    console.log(de);
-    }
-    callback(de); 
-  })   
-}
-async function showProjectDetails(id,callback){
-  var projectDetails=mongoose.model("Project");
-  projectDetails.findById(id,function(err,post){
-  if (err) return next(err);
-  console.log("post "+post)
-  callback(post);
+    return res.status(200).json({data});    
+  });
+});
+router.get('/showLeaveApplication/:id',function(req, res,next){
+  var emp = mongoose.model("applyleaves");
+  console.log(req.params.id)
+  emp.find({ 'applyTo': req.params.id },function(err, data){ 
+    if (err) return next(err);
+    return res.status(200).json({data});    
+  });
+});
 
-  })
-}
-router.get('/getAssignedProject/:id',function(req,res){
-  var detail=[];
-  detail= showprojects(req,res);
-  console.log(detail)
+router.get('/myLeave/:id',function(req, res,next){
+  var emp = mongoose.model("applyleaves");
+  console.log(req.params.id)
+  emp.find({ 'employeeId': req.params.id },function(err, data){ 
+    if (err) return next(err);
+    return res.status(200).json({data});    
+  });
+});
+
+router.post("/assignProject",function(req,res){
+  assignProject(req,res);
+});
+
+router.post("/applyleave",function(req,res){
+  applyleave(req,res);
+});
+
+router.put('/leaveAction/:id', function(req, res, next) {
+  leave.findByIdAndUpdate(req.params.id, req.body.params,function (err, post) {
+    if (err) return next(err);
+    res.json(post);
+  });
+});
+
+
+
+//  async function showprojects(req,res,callback){
+//   var projects=mongoose.model("employee_project");
+//   projects.find({'employeeId':req.params.id},'projectId',async function(err,data){
+//     var de=[],show;
+//     if (err) return next(err);
+//     for(let i=0; i<data.length;i++){
+//     await showProjectDetails(data[i]['projectId'])
+//     de.push(show);
+//     console.log(de);
+//     }
+//     return de; 
+//   })   
+// }
+// async function showProjectDetails(id,callback){
+//   var projectDetails=mongoose.model("Project");
+//   projectDetails.findById(id,function(err,post){
+//   if (err) return next(err);
+//   console.log("post "+post)
+//   return post;
+
+//   })
+// }
+router.get('/getAssignedProject/:id', async function(req,res){
+  // var detail=[];
+  // await showprojects(req,res);
+  // console.log(detail)
+  var MongoClient = require('mongodb').MongoClient;
+  var url = "mongodb://localhost";
+  MongoClient.connect(url, function(err, db) {
+  if (err) throw err;
+  var dbo = db.db("assignment");
+  dbo.collection('employee_projects').aggregate([
+    { $lookup:
+      {
+        from: 'projects',
+        localField: 'projectId',
+        foreignField: '_id',
+        as: 'projectdetails'
+      }
+    }
+  ]).toArray(function(err, res) {
+    if (err) throw err;
+    console.log(JSON.stringify(res));
+    db.close();
+    return res;
+  });
+});
+
+
 })
 
 
@@ -157,6 +219,27 @@ async function addToDB(req, res) {
 
   try {
     doc =  assign.save();
+    return res.status(201).json(doc);
+  }
+  catch (err) {
+    return res.status(501).json(err);
+  }
+}
+async function applyleave(req, res) {
+  var apply = new leave({
+    employeeId: req.query.employeeid,
+    leaveType: req.body.leaveType,
+    fromDate: req.body.fromDate,
+    fromSession : req.body.fromSession,
+    toDate:req.body.toDate,
+    tillSession:req.body.tillSession,
+    applyTo:req.body.applyTo,
+    status:req.query.status,
+    appliedDate: Date.now()
+  });
+
+  try {
+    doc =  apply.save();
     return res.status(201).json(doc);
   }
   catch (err) {

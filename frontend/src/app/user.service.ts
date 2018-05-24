@@ -83,6 +83,13 @@ export class UserService {
       headers:new HttpHeaders().append('Content-Type','application/json')
     })
   }
+   showManager(){
+    return this._http.get('http://127.0.0.1:3000/userApi/showManager',{
+      observe:'body',
+      withCredentials:true,
+      headers:new HttpHeaders().append('Content-Type','application/json')
+    })
+  }
   assign(projectid:any,employeeid:any){
      return this._http.post('http://127.0.0.1:3000/userApi/assignProject',{
       params:{employeeid:employeeid, projectid:projectid},
@@ -105,5 +112,34 @@ export class UserService {
       headers:new HttpHeaders().append('Content-Type','application/json')
     });
   }
-
+  applyleave(id:any,body:any){
+     return this._http.post('http://127.0.0.1:3000/userApi/applyleave',body,{
+      params:{ employeeid : id, status: "unread"},
+      observe:'body',
+      withCredentials:true,
+      headers:new HttpHeaders().append('Content-Type','application/json')
+    });
+  }
+  showLeaveApplication(id:any){
+    return this._http.get('http://127.0.0.1:3000/userApi/showLeaveApplication/'+id,{
+      observe:'body',
+      withCredentials:true,
+      headers:new HttpHeaders().append('Content-Type','application/json')
+    });
+  }
+  leaveAction(id:any,option:String){
+     return this._http.put('http://127.0.0.1:3000/userApi/leaveAction/'+id,{
+      params:{status:option},
+      observe:'body',
+      withCredentials:true,
+      headers:new HttpHeaders().append('Content-Type','application/json')
+    })
+  }
+  myLeave(id:any){
+    return this._http.get('http://127.0.0.1:3000/userApi/myLeave/'+id,{
+      observe:'body',
+      withCredentials:true,
+      headers:new HttpHeaders().append('Content-Type','application/json')
+    });
+  }
 }

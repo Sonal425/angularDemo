@@ -18,6 +18,7 @@ import { AddTaskComponent } from './add-task/add-task.component';
 import { AssignEmployeeComponent } from './assign-employee/assign-employee.component';
 import {FilterArray } from './filter';
 import { LeaveComponent } from './leave/leave.component';
+import { LeaveApplicationComponent } from './leave-application/leave-application.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { LeaveComponent } from './leave/leave.component';
     AddTaskComponent,
     AssignEmployeeComponent,
     FilterArray,
-    LeaveComponent
+    LeaveComponent,
+    LeaveApplicationComponent
   ],
   imports: [
     BrowserModule,

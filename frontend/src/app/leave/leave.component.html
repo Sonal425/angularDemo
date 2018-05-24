@@ -1,10 +1,10 @@
 <div class="container" id="box">
   <h3 align="center"> Apply For leave</h3>
-   <form method="post">
+   <form method="post" [formGroup]="leaveForm">
     <div class="row">
       <div class="form-group col-sm-6" >
         <h5><label for="leaveType"> Leave Type </label></h5>
-        <select [(ngModel)]="leaveType" class="form-control" name="leaveType">
+        <select formControlName="leaveType" class="form-control" name="leaveType">
           <option> Casual</option>
           <option> Loss of pay </option>
           <option> Sick </option>
@@ -13,26 +13,61 @@
       </div>
     </div>
     <div class="row">
-      <div class="form-group col-sm-6" >
-        <h5><label for=" fromDate"> From </label></h5>
-        <input type="date" [(ngModel)]="fromDate " class="form-control" name="fromDate">
+      <div class="form-group col-sm-3" >
+        <h5>From</h5>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-sm-3" >
+        <h6><label for=" fromDate"> Date</label></h6>
+        <input type="date" formControlName="fromDate" class="form-control" name="fromDate">
+      </div>
+      <div class="form-group col-sm-3" >
+        <h6><label for="fromSession"> From Session </label></h6>
+        <select formControlName="fromSession" class="form-control" name="fromSession">
+          <option> Session 1</option>
+          <option> Session 2 </option>
+        </select> 
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-sm-3" >
+        <h5>Till</h5>
       </div>
     </div>
      <div class="row">
-      <div class="form-group col-sm-6" >
-        <h5><label for=" toDate"> Till </label></h5>
-        <input type="date" [(ngModel)]="toDate" class="form-control" name="toDate">
+      <div class="form-group col-sm-3" >
+        <h6><label for=" toDate"> Date</label></h6>
+        <input type="date" formControlName="toDate" class="form-control" name="toDate">
+      </div>
+        <div class="form-group col-sm-3" >
+        <h6><label for="tillSession"> Till Session </label></h6>
+        <select formControlName="tillSession" class="form-control" name="tillSession">
+          <option> Session 1</option>
+          <option> Session 2 </option>
+        </select> 
       </div>
     </div>
     <div class="row">
       <div class="form-group col-sm-6" >
         <h5><label for=" reason"> Reason </label></h5>
-        <textarea [(ngModel)]="reason" class="form-control" name="reason"> </textarea>
+        <textarea formControlName="reason" class="form-control" name="reason"> </textarea>
       </div>
     </div>
     <div class="row">
       <div class="form-group col-sm-6" >
-        <button class="btn btn-primary"(click)="checkDate(fromDate,toDate)">Apply</button>
+        <h6><label for="applyTo"> Apply To </label></h6>
+        <select formControlName="applyTo" class="form-control" name="applyTo" >
+          <option *ngFor="let user of manager" [value]=user._id> {{user.name}}</option>    
+        </select> 
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-sm-6" >
+        &nbsp;  &nbsp; &nbsp;    &nbsp;  &nbsp; &nbsp;  &nbsp; &nbsp;  &nbsp; &nbsp;
+        <button class="btn btn-primary"(click)="applyleave()">Apply</button>
+        &nbsp; &nbsp; &nbsp;
+         <a [routerLink]="['/employee', employeeid]" class="btn btn-primary" >Cancel</a>
       </div>
     </div>
   </form>

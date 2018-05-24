@@ -11,7 +11,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ManagerComponent implements OnInit {
   project=[{}];
-  constructor(private _user:UserService, private _router:Router) {
+  id:any;
+  constructor(private route: ActivatedRoute,private _user:UserService, private _router:Router) {
+    this.id= this.route.snapshot.params['id'];
     this._user.showProject()
     .subscribe(
       data=> this.project=data['data'],

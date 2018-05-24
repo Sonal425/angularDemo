@@ -11,7 +11,7 @@ import { AddTaskComponent } from './add-task/add-task.component';
 import { AssignEmployeeComponent } from './assign-employee/assign-employee.component';
 import { LeaveComponent } from './leave/leave.component';
 import {loggedIn } from './guards';
-
+import { LeaveApplicationComponent } from './leave-application/leave-application.component';
 
 const routes: Routes = [
   {
@@ -63,8 +63,12 @@ const routes: Routes = [
     component: AssignEmployeeComponent
   },
     {
-    path: 'leave',
+    path: 'leave/:id',
     component: LeaveComponent
+  },
+   {
+    path: 'leaveApplication/:id',
+    component: LeaveApplicationComponent
   }
 ];
 @NgModule({
