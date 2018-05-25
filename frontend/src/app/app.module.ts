@@ -19,6 +19,7 @@ import { AssignEmployeeComponent } from './assign-employee/assign-employee.compo
 import {FilterArray } from './filter';
 import { LeaveComponent } from './leave/leave.component';
 import { LeaveApplicationComponent } from './leave-application/leave-application.component';
+import { MyStatusComponent } from './my-status/my-status.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { LeaveApplicationComponent } from './leave-application/leave-application
     AssignEmployeeComponent,
     FilterArray,
     LeaveComponent,
-    LeaveApplicationComponent
+    LeaveApplicationComponent,
+    MyStatusComponent
   ],
   imports: [
     BrowserModule,

@@ -1,7 +1,8 @@
 <input type=submit value=logout class="btn btn-primary  align-right" id="submit" (click)="logout()">&nbsp; &nbsp;
 <a [routerLink]="['/leave', id]">Apply For Leave</a>  &nbsp; &nbsp;&nbsp; &nbsp; 
 <a  href="" data-toggle="modal" data-target="#leavehistory" >Leave History</a>   &nbsp; &nbsp;&nbsp; &nbsp;
-<a  href="" data-toggle="modal" data-target="#status" >Send Status</a> 
+<a  href="" data-toggle="modal" data-target="#status" >Send Status</a> &nbsp; &nbsp;&nbsp; &nbsp;
+<a [routerLink]="['/myStatus', id]">My Status History</a>   
 
 <div class="container">
   <table class="table ">
@@ -13,30 +14,25 @@
           <th>Type</th>
           <th>Technology</th>
           <th>Image</th>
-          <th>Option</th>
         </tr>
       </thead>
        <tbody>
         <tr *ngFor= "let details of project" >
-          <td>{{details.title}}</td>
-          <td>{{details.description}}</td>
-          <td>{{details.clientName}}</td>
-          <td>{{details.type}}</td>  
-          <td><ul *ngFor= "let tech of details.technology ">
-            <li>{{tech}}</li>
-          </ul>
-        </td>
-          <td><img src="../assets/images/{{details.image}}" height="100">
+          <td>{{details.projectdetails[0].title}}</td>
+          <td>{{details.projectdetails[0].description}}</td>
+          <td>{{details.projectdetails[0].clientName}}</td>
+          <td>{{details.projectdetails[0].projectType}}</td>  
+          <td>
+            <ul *ngFor= "let tech of details.projectdetails[0].technology ">
+                <li>{{tech}}</li>
+            </ul>
           </td>
-          <td > 
-            <a [routerLink]="['/assignEmployee', details._id]" class="btn btn-success">Assign</a>  
-         </td> 
+          <td><img src="../assets/images/{{details.projectdetails[0].image}}" height="100">
+          </td> 
       </tr>
     </tbody>
   </table>
 </div>
-
-
 
 <div class="container-fluid">
   <div class="modal fade" id="leavehistory" role="dialog">
@@ -91,13 +87,11 @@
             <div class="card-body">
                <form method="post" [formGroup]="statusForm">
                   <div class="row">
-                    <div class="form-group col-sm-4" >
+                    <div class="form-group col-sm-4"  >
                       <b><label for="to"> To </label></b>
-                      <select  class="form-control" name="to" formControlName="to">
-                        <option> Casual</option>
-                        <option> Loss of pay </option>
-                        <option> Sick </option>
-                        <option> Paid</option>
+                      <select  class="form-control" name="to" formControlName="to" >
+                     <option *ngFor="let user of manager" [value]=user._id> {{user.name}}</option>
+                     
                       </select> 
                     </div>
                     <div class="form-group col-sm-4" >
@@ -126,8 +120,8 @@
                   <div class="row">
                     <div class="form-group col-sm-8">
                     <b> Project </b> &nbsp; &nbsp; &nbsp;
-                    <input type="radio"  name="type" value="manager" (click)="show='no'">Not Assigned &nbsp; &nbsp;
-                    <input type="radio" name="type" value="employee"  (click)="show='yes'" >Assigned
+                    <input type="radio" formControlName="type" value="Not assigned" (click)="show='no'">Not Assigned &nbsp; &nbsp;
+                    <input type="radio" formControlName="type" value="Assigned" (click)="show='yes'">Assigned
                   </div>
                 </div >
                 <div *ngIf="show=='yes'" id="projectDetail">
@@ -139,9 +133,8 @@
                    <div class="form-group col-sm-4" >
                       <b><label for="projectName"> Project Name </label></b>
                       <select class="form-control" formControlName="projectName">
-                        <option>
-                          
-                        </option>
+                        <option *ngFor= "let details of project">{{details.projectdetails[0].title}}          
+                        </option>   
                       </select>  
                     </div>
                     <div class="form-group col-sm-4">
@@ -174,7 +167,7 @@
             </div>   
           </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" (click)="status()">Send</button>
+          <button type="button" class="btn btn-primary" (click)="status()" data-dismiss="modal">Send</button>
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         </div>
       </div>     

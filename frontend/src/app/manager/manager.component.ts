@@ -12,6 +12,7 @@ import { Component, OnInit } from '@angular/core';
 export class ManagerComponent implements OnInit {
   project=[{}];
   id:any;
+  status=[{}];
   constructor(private route: ActivatedRoute,private _user:UserService, private _router:Router) {
     this.id= this.route.snapshot.params['id'];
     this._user.showProject()
@@ -19,6 +20,14 @@ export class ManagerComponent implements OnInit {
       data=> this.project=data['data'],
       error=>console.log(error)
     ) 
+      this._user.allStatus(this.id)
+    .subscribe(
+       data=>{
+        this.status=data['data'];   
+      },
+      error=>console.log(error)
+    )
+ 
   }
 
   ngOnInit() {}

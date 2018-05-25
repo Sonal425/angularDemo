@@ -1,0 +1,26 @@
+<a [routerLink]="['/employee', id]" class="btn btn-primary">Back</a> 
+<div class="card" *ngFor="let details of status">
+  <div class="card-header"><h5> <b>Status Date: {{details.statusDate | date:'fullDate'}} </b></h5></div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-sm-4"><b>To:</b> {{details.to}}</div>  
+      <div class="col-sm-4"><b>In Time: </b>{{details.inTime}}</div>   
+      <div class="col-sm-4"><b>Out Time: </b>{{details.outTime}}</div>   
+    </div> 
+      <div class="row">
+      <div class="col-sm-4"><b>Break Time:</b> {{details.breakTime}}</div>  
+      <div class="col-sm-4"><b> Project: </b>{{details.type}}</div>      
+    </div> 
+    <div class="row" *ngIf="details.type=='Assigned'">
+      <div class="col-sm-4"><b>Project Name:</b> {{details.projectName}}</div>  
+      <div class="col-sm-4"><b>Working Hours: </b>{{details.workTime}}</div>   
+      <div class="col-sm-4"><b>Status: </b>{{details.status}}</div>   
+    </div> 
+    <div class="row">
+      <div class="col-sm-12"><b>Task:</b> {{details.task}}</div>
+    </div>
+
+
+
+  </div>
+</div>

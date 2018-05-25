@@ -13,10 +13,13 @@ import { Observable } from 'rxjs/Observable';
 export class AddTaskComponent implements OnInit {
   filesToUpload: File;
   url="";
+  id:any;
   skills=[{skills:"angular"},{skills:"nodejs"},{skills:"mongodb"},{skills:"html"},{skills:"java"}]
   addTaskForm : FormGroup;
   
-  constructor(private router: Router, private _user:UserService,private http: HttpClient,private fb: FormBuilder) { }
+  constructor(private route: ActivatedRoute ,private router: Router, private _user:UserService,private http: HttpClient,private fb: FormBuilder) { 
+    this.id= this.route.snapshot.params['id'];
+  }
 
   ngOnInit() {
     this.addTaskForm = this.fb.group({
@@ -32,7 +35,7 @@ export class AddTaskComponent implements OnInit {
     this._user.addTask(JSON.stringify(this.addTaskForm.value))
     .subscribe(
       data => {
-        this.router.navigate(["/manager"]);},
+        this.router.navigate(["/manager/"+this.id]);},
         (err) => {
         console.log(err);
       }
@@ -46,7 +49,7 @@ export class AddTaskComponent implements OnInit {
     formData.append("form",JSON.stringify(this.addTaskForm.value));
     this.http.post('http://localhost:3000/upload', formData)
       .subscribe(files =>{
-        this.router.navigate(['/manager'])
+        this.router.navigate(['/manager/'+this.id])
       } 
     )
   }

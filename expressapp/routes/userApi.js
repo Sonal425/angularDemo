@@ -3,6 +3,7 @@ var router = express.Router();
 var User = require('../models/user');
 var Project = require('../models/project');
 var leave = require('../models/leave');
+var status = require('../models/status');
 var employee_project =require('../models/employee_project');
 var passport = require('passport');
 var mongoose = require('mongoose');
@@ -102,12 +103,51 @@ router.get('/showLeaveApplication/:id',function(req, res,next){
 
 router.get('/myLeave/:id',function(req, res,next){
   var emp = mongoose.model("applyleaves");
-  console.log(req.params.id)
   emp.find({ 'employeeId': req.params.id },function(err, data){ 
     if (err) return next(err);
     return res.status(200).json({data});    
   });
 });
+
+router.get('/myStatus/:id',function(req, res,next){
+  //   console.log("nvj");
+  // var status= mongoose.model("status");
+
+  // status.aggregate([
+  //   {
+  //     $match : { 'employeeId': req.params.id } },
+  //     { $lookup:{
+  //       from:"users",
+  //       localField:"to",
+  //       foreignField:"_id",
+  //       as:"manager"}
+  //     }
+  //     ]).exec().then(function(data) {
+  //       console.log(data)
+  //       return res.json(data)
+  //     }).catch(function(err){
+  //       console.log(err)
+  //     })
+  //   });
+
+  var emp = mongoose.model("status");
+  emp.find({ 'employeeId': req.params.id },null,{ sort:
+        {statusDate: -1 //Sort by Date Added DESC
+    }},function(err, data){ 
+    if (err) return next(err);
+    return res.status(200).json({data});    
+  });
+});
+router.get('/allStatus/:id',function(req, res,next){
+  var emp = mongoose.model("status");
+  emp.find({ 'to': req.params.id },null,{ sort:
+        {statusDate: -1 //Sort by Date Added DESC
+    }},function(err, data){ 
+    if (err) return next(err);
+    return res.status(200).json({data});    
+  });
+});
+
 
 router.post("/assignProject",function(req,res){
   assignProject(req,res);
@@ -155,27 +195,29 @@ router.get('/getAssignedProject/:id', async function(req,res){
   var MongoClient = require('mongodb').MongoClient;
   var url = "mongodb://localhost";
   MongoClient.connect(url, function(err, db) {
-  if (err) throw err;
-  var dbo = db.db("assignment");
-  dbo.collection('employee_projects').aggregate([
-    { $lookup:
-      {
-        from: 'projects',
-        localField: 'projectId',
-        foreignField: '_id',
-        as: 'projectdetails'
-      }
-    }
-  ]).toArray(function(err, res) {
     if (err) throw err;
-    console.log(JSON.stringify(res));
-    db.close();
-    return res;
+    var dbo = db.db("assignment");
+    dbo.collection('employee_projects').aggregate([
+      { $lookup:
+        {
+          from: 'projects',
+          localField: 'projectId',
+          foreignField: '_id',
+          as: 'projectdetails'
+        }
+      }
+    ]).toArray(function(err, data) {
+      if (err) throw err;;
+      // db.close();
+      return res.json(data); 
+    });
   });
+})
+
+router.post("/sendStatus",function(req,res){
+  sendStatus(req,res);
 });
 
-
-})
 
 
 // router.get('/showAssignedProject',function(req,res,next){
@@ -226,8 +268,9 @@ async function addToDB(req, res) {
   }
 }
 async function applyleave(req, res) {
+
   var apply = new leave({
-    employeeId: req.query.employeeid,
+    employeeId: req.body.params.employeeid,
     leaveType: req.body.leaveType,
     fromDate: req.body.fromDate,
     fromSession : req.body.fromSession,
@@ -240,6 +283,30 @@ async function applyleave(req, res) {
 
   try {
     doc =  apply.save();
+    return res.status(201).json(doc);
+  }
+  catch (err) {
+    return res.status(501).json(err);
+  }
+}
+async function sendStatus(req, res) {
+  var Status = new status({
+    employeeId: req.query.employeeid,
+    to: req.body.to,
+    statusDate: req.body.statusDate,
+    inTime : req.body.inTime,
+    outTime:req.body.outTime,
+    breakTime:req.body.breakTime,
+    type : req.body.type,
+    projectName:req.body.projectName,
+    workTime:req.body.workTime,
+    status:req.body.status,
+    task:req.body.task,
+    creation_dt: Date.now()
+  });
+
+  try {
+    doc =  Status.save();
     return res.status(201).json(doc);
   }
   catch (err) {

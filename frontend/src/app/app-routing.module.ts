@@ -12,6 +12,7 @@ import { AssignEmployeeComponent } from './assign-employee/assign-employee.compo
 import { LeaveComponent } from './leave/leave.component';
 import {loggedIn } from './guards';
 import { LeaveApplicationComponent } from './leave-application/leave-application.component';
+import { MyStatusComponent } from './my-status/my-status.component';
 
 const routes: Routes = [
   {
@@ -55,7 +56,7 @@ const routes: Routes = [
     data: { title: 'Edit' }
   },
   {
-    path: 'addTask',
+    path: 'addTask/:id',
     component: AddTaskComponent
   },
   {
@@ -65,6 +66,10 @@ const routes: Routes = [
     {
     path: 'leave/:id',
     component: LeaveComponent
+  },
+  {
+    path: 'myStatus/:id',
+    component: MyStatusComponent
   },
    {
     path: 'leaveApplication/:id',

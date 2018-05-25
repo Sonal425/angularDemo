@@ -1,6 +1,7 @@
 <input type=submit value=logout class="btn btn-primary  align-right" id="submit" (click)="logout()">&nbsp; &nbsp;
-<a [routerLink]="['/addTask']">Add Project</a> &nbsp; &nbsp;
-<a [routerLink]="['/leaveApplication',id]">Leave Applications</a>  
+<a [routerLink]="['/addTask',id]">Add Project</a> &nbsp; &nbsp;
+<a [routerLink]="['/leaveApplication',id]">Leave Applications</a>  &nbsp; &nbsp;
+<a  href="" data-toggle="modal" data-target="#status">Show Status</a>   
 <div class="container">
   <table class="table ">
       <thead class="thead-dark">
@@ -33,3 +34,40 @@
     </tbody>
   </table>
 </div>
+
+<div class="container-fluid">
+  <div class="modal fade" id="status" role="dialog">
+    <div class="modal-dialog  modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>         
+        </div>
+        <div class="modal-body container">
+         <div class="card" *ngFor="let details of status">
+            <div class="card-header"><h5> <b>Status Date: {{details.statusDate | date:'fullDate'}} </b></h5></div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-4"><b>From:</b> {{details.employeeId}}</div>  
+                <div class="col-sm-4"><b>In Time: </b>{{details.inTime}}</div>   
+                <div class="col-sm-4"><b>Out Time: </b>{{details.outTime}}</div>   
+              </div> 
+                <div class="row">
+                <div class="col-sm-4"><b>Break Time:</b> {{details.breakTime}}</div>  
+                <div class="col-sm-4"><b> Project: </b>{{details.type}}</div>      
+              </div> 
+              <div class="row" *ngIf="details.type=='Assigned'">
+                <div class="col-sm-4"><b>Project Name:</b> {{details.projectName}}</div>  
+                <div class="col-sm-4"><b>Working Hours: </b>{{details.workTime}}</div>   
+                <div class="col-sm-4"><b>Status: </b>{{details.status}}</div>   
+              </div> 
+              <div class="row">
+                <div class="col-sm-12"><b>Task:</b> {{details.task}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
