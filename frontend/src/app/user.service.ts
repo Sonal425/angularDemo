@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders,HttpParams } from '@angular/common/http';
 @Injectable()
 export class UserService {
-  public isLoggedIn:boolean;
-  isloggedIn=false;
+  public isLoggedIn=false;
 
   constructor(private _http:HttpClient) { }
   register(body:any){
@@ -159,6 +158,14 @@ export class UserService {
   sendStatus(id:any,body:any){
      return this._http.post('http://127.0.0.1:3000/userApi/sendStatus',body,{
       params:{ employeeid : id},
+      observe:'body',
+      // withCredentials:true,
+      headers:new HttpHeaders().append('Content-Type','application/json')
+    });
+  }
+  search(searchKeyword:any){
+    return this._http.get('http://127.0.0.1:3000/userApi/search',{
+      params:{keyword:searchKeyword},
       observe:'body',
       // withCredentials:true,
       headers:new HttpHeaders().append('Content-Type','application/json')

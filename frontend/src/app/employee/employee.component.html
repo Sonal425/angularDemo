@@ -55,8 +55,8 @@
               </tr>
             </thead>
             <tbody *ngFor= "let details of applications" >
-              <tr *ngIf="details.status!='unread'" >
-                <td>{{details.applyTo}}</td>
+              <tr>
+                <td>{{details.manager[0].name}}</td>
                 <td>{{details.leaveType}}</td>
                 <td>{{details.fromDate}}<br> {{details.fromSession}} </td>
                 <td>{{details.toDate}} <br>{{details.tillSession}} </td>

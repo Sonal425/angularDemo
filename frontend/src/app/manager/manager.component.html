@@ -47,7 +47,7 @@
             <div class="card-header"><h5> <b>Status Date: {{details.statusDate | date:'fullDate'}} </b></h5></div>
             <div class="card-body">
               <div class="row">
-                <div class="col-sm-4"><b>From:</b> {{details.employeeId}}</div>  
+                <div class="col-sm-4"><b>From:</b> {{details.employee[0].name}}</div>  
                 <div class="col-sm-4"><b>In Time: </b>{{details.inTime}}</div>   
                 <div class="col-sm-4"><b>Out Time: </b>{{details.outTime}}</div>   
               </div> 

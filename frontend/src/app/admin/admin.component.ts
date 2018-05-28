@@ -29,6 +29,7 @@ export class AdminComponent implements OnInit {
   ngOnInit() {}
   
   logout(){
+    sessionStorage.setItem('login', 'false');
     this._user.logout()
     .subscribe(
       data=>this._router.navigate(['/login']),

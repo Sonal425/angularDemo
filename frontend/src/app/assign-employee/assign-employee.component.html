@@ -1,11 +1,7 @@
-<input type="text" [(ngModel)]="searchText">
-<button> Ok</button>
-<!-- <ul>
-  <li *ngFor="let c of characters | filter : searchText">
-    {{c}}
-  </li>
-</ul> -->
-<div class="container">
+<h6><b><i> Enter Keyword to search:</i></b> </h6><input type="text" [(ngModel)]="searchText">
+<button (click)="search()" > Ok</button><br><br>
+
+<div class="container" *ngIf="intial=='yes'">
   <table class="table ">
     <thead class="thead-dark">
       <tr>
@@ -16,7 +12,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr  *ngFor="let details of users| filter : searchText"  >
+      <tr  *ngFor="let details of users"  >
         <td>{{details.name }}</td>
         <td>{{details.email}}</td>
         <td>
@@ -31,3 +27,31 @@
     </tbody>
   </table>
 </div>
+
+<div class="container" *ngIf="intial=='no'">
+  <table class="table ">
+    <thead class="thead-dark">
+      <tr>
+        <th >Name</th>
+        <th>Email</th>
+        <th>Technology</th>
+        <th>Option</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr  *ngFor="let details of filterValue"  >
+        <td>{{details.name }}</td>
+        <td>{{details.email}}</td>
+        <td>
+          <ul *ngFor= "let tech of details.technology ">
+            <li>{{tech }}</li>
+          </ul>
+        </td>
+        <td >
+          <button class="btn btn-primary" (click)="assign(details._id, details.name)">Assign</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+

@@ -25,9 +25,7 @@ export class LeaveComponent implements OnInit {
     this._user.showManager()
     .subscribe(
       data=>{
-        console.log(data); 
         this.manager=data['data'];
-        console.log(this.manager) 
       },
       error=>console.log(error)
     )
@@ -35,8 +33,7 @@ export class LeaveComponent implements OnInit {
    
 
   ngOnInit() {
-     this.employeeid= this.route.snapshot.params['id'];
-     console.log(this.employeeid)
+    this.employeeid= this.route.snapshot.params['id'];
   }
   // checkDate(fromDate,toDate){
 

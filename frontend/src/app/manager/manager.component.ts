@@ -12,7 +12,7 @@ import { Component, OnInit } from '@angular/core';
 export class ManagerComponent implements OnInit {
   project=[{}];
   id:any;
-  status=[{}];
+  status:any;
   constructor(private route: ActivatedRoute,private _user:UserService, private _router:Router) {
     this.id= this.route.snapshot.params['id'];
     this._user.showProject()
@@ -23,21 +23,20 @@ export class ManagerComponent implements OnInit {
       this._user.allStatus(this.id)
     .subscribe(
        data=>{
-        this.status=data['data'];   
+        this.status=data;
       },
       error=>console.log(error)
     )
- 
   }
 
   ngOnInit() {}
 
    logout(){
+  sessionStorage.setItem('login', 'false');
     this._user.logout()
     .subscribe(
       data=>this._router.navigate(['/login']),
       error=>console.error(error)
     )
   }
-
 }

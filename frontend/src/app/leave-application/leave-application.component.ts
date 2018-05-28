@@ -9,13 +9,13 @@ import { UserService } from '../user.service';
 })
 export class LeaveApplicationComponent implements OnInit {
   id:any;
-  applications=[];
+  applications:any;
   constructor(private route: ActivatedRoute,private _user:UserService, private router:Router) { 
    this.id= this.route.snapshot.params['id'];
     this._user.showLeaveApplication(this.id)
     .subscribe(
       data=>{
-        this.applications=data['data'];    
+        this.applications=data;    
       },
       error=>console.log(error)
      )

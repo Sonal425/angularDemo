@@ -34,6 +34,26 @@ router.get('/admin',function(req, res,next){
   });
 });
 
+router.get('/search',function(req, res,next){
+  var user = mongoose.model("User");
+  const keyword = new RegExp(req.query.keyword, 'i');
+  user.find(
+    {
+      $and:[
+      {"type":"employee"},
+      {$or:[
+        {"name": keyword},
+        {"technology": keyword},
+        {"email": keyword}
+      ]}
+    ]},
+    function(err, userservices) { 
+      if (err) return next(err);
+      return res.json(userservices);
+    }
+  );
+});
+
 router.get('/showProject',function(req, res,next){
   var project = mongoose.model("Project");
   var show;
@@ -94,58 +114,121 @@ router.get('/showManager',function(req, res,next){
 });
 router.get('/showLeaveApplication/:id',function(req, res,next){
   var emp = mongoose.model("applyleaves");
-  console.log(req.params.id)
-  emp.find({ 'applyTo': req.params.id },function(err, data){ 
-    if (err) return next(err);
-    return res.status(200).json({data});    
-  });
+  emp.aggregate([
+    { $lookup:{
+        from:"users",
+        localField:"employeeId",
+        foreignField:"_id",
+        as:"employee" 
+      } 
+    },   
+    { $match : { 
+      'applyTo':  mongoose.Types.ObjectId(req.params.id)
+      }
+    },
+    { $sort: {fromDate: -1 }
+    }
+     ]).exec().then(function(data) {
+      console.log(data)
+      return res.json(data)
+    }).catch(function(err){
+        console.log(err)
+      })
+
+  // emp.find({ 'applyTo': req.params.id },function(err, data){ 
+  //   if (err) return next(err);
+  //   return res.status(200).json({data});    
+  // });
 });
 
 router.get('/myLeave/:id',function(req, res,next){
   var emp = mongoose.model("applyleaves");
-  emp.find({ 'employeeId': req.params.id },function(err, data){ 
-    if (err) return next(err);
-    return res.status(200).json({data});    
-  });
+    emp.aggregate([
+    { $lookup:{
+        from:"users",
+        localField:"applyTo",
+        foreignField:"_id",
+        as:"manager" 
+      } 
+    },   
+    { $match : { 
+      'employeeId':  mongoose.Types.ObjectId(req.params.id)
+      }
+    },
+    { $sort: {fromDate: -1 }
+    }
+     ]).exec().then(function(data) {
+      console.log(data)
+      return res.json(data)
+    }).catch(function(err){
+        console.log(err)
+      })
+  // emp.find({ 'employeeId': req.params.id },function(err, data){ 
+  //   if (err) return next(err);
+  //   return res.status(200).json({data});    
+  // });
 });
 
 router.get('/myStatus/:id',function(req, res,next){
-  //   console.log("nvj");
-  // var status= mongoose.model("status");
-
-  // status.aggregate([
-  //   {
-  //     $match : { 'employeeId': req.params.id } },
-  //     { $lookup:{
-  //       from:"users",
-  //       localField:"to",
-  //       foreignField:"_id",
-  //       as:"manager"}
-  //     }
-  //     ]).exec().then(function(data) {
-  //       console.log(data)
-  //       return res.json(data)
-  //     }).catch(function(err){
-  //       console.log(err)
-  //     })
-  //   });
-
-  var emp = mongoose.model("status");
-  emp.find({ 'employeeId': req.params.id },null,{ sort:
-        {statusDate: -1 //Sort by Date Added DESC
-    }},function(err, data){ 
-    if (err) return next(err);
-    return res.status(200).json({data});    
-  });
+  var status= mongoose.model("status");
+  status.aggregate([
+    { $lookup:{
+        from:"users",
+        localField:"to",
+        foreignField:"_id",
+        as:"manager" 
+      } 
+    },   
+    { $match : { 
+      'employeeId':  mongoose.Types.ObjectId(req.params.id)
+      }
+    },
+    { $sort: {statusDate: -1 }
+    }     
+  ]).exec().then(function(data) {
+      console.log(data)
+      return res.json(data)
+    }).catch(function(err){
+        console.log(err)
+      })
 });
+
+//   var emp = mongoose.model("status");
+//   emp.find({ 'employeeId': req.params.id },null,{ sort:
+//         {statusDate: -1 //Sort by Date Added DESC
+//     }},function(err, data){ 
+//     if (err) return next(err);
+//     return res.status(200).json({data});    
+//   });
+// });
 router.get('/allStatus/:id',function(req, res,next){
-  var emp = mongoose.model("status");
-  emp.find({ 'to': req.params.id },null,{ sort:
-        {statusDate: -1 //Sort by Date Added DESC
-    }},function(err, data){ 
-    if (err) return next(err);
-    return res.status(200).json({data});    
-  });
+  var status = mongoose.model("status");
+status.aggregate([
+    { $lookup:{
+        from:"users",
+        localField:"employeeId",
+        foreignField:"_id",
+        as:"employee" 
+      } 
+    },   
+    { $match : { 
+      'to':  mongoose.Types.ObjectId(req.params.id)
+      }
+    },
+    { $sort: {statusDate: -1 }
+    }     
+  ]).exec().then(function(data) {
+      return res.json(data)
+    }).catch(function(err){
+        console.log(err)
+      })
+
+  // emp.find({ 'to': req.params.id },null,{ sort:
+  //       {statusDate: -1 //Sort by Date Added DESC
+  //   }},function(err, data){ 
+  //   if (err) return next(err);
+  //   return res.status(200).json({data});    
+  // });
 });
 
 
@@ -268,9 +351,9 @@ async function addToDB(req, res) {
   }
 }
 async function applyleave(req, res) {
-
+console.log(req)
   var apply = new leave({
-    employeeId: req.body.params.employeeid,
+    employeeId: req.query.employeeid,
     leaveType: req.body.leaveType,
     fromDate: req.body.fromDate,
     fromSession : req.body.fromSession,

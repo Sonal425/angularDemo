@@ -11,6 +11,10 @@ import { AddTaskComponent } from './add-task/add-task.component';
 import { AssignEmployeeComponent } from './assign-employee/assign-employee.component';
 import { LeaveComponent } from './leave/leave.component';
 import {loggedIn } from './guards';
+import {notloggedIn } from './guards';
+import {adminGuard } from './guards';
+import {employeeGuard } from './guards';
+import {managerGuard } from './guards';
 import { LeaveApplicationComponent } from './leave-application/leave-application.component';
 import { MyStatusComponent } from './my-status/my-status.component';
 
@@ -23,27 +27,27 @@ const routes: Routes = [
   {
   path:'login',
   component:LoginComponent,
-  // canActivate: [notloggedIn]
+  canActivate: [notloggedIn]
    },
   {
   path:'register', 
   component:RegisterComponent,
-  // canActivate: [notloggedIn]
+  canActivate: [notloggedIn]
   },
  {
   path:'admin/:id',
   component: AdminComponent,
-  // canActivate: [loggedIn]
+  canActivate: [loggedIn, adminGuard]
   },
    {
   path:'employee/:id',
   component: EmployeeComponent,
-  // canActivate: [loggedIn]
+  canActivate: [loggedIn, employeeGuard]
   },
    {
   path:'manager/:id',
   component: ManagerComponent,
-  // canActivate: [loggedIn]
+  canActivate: [loggedIn, managerGuard]
   },
   {
   path:'home',
@@ -53,27 +57,33 @@ const routes: Routes = [
     {
     path: 'edit/:id',
     component: EditComponent,
-    data: { title: 'Edit' }
+    data: { title: 'Edit' },
+    canActivate: [loggedIn, adminGuard]
   },
   {
     path: 'addTask/:id',
-    component: AddTaskComponent
+    component: AddTaskComponent,
+    canActivate: [loggedIn, managerGuard]
   },
   {
     path: 'assignEmployee/:id',
-    component: AssignEmployeeComponent
+    component: AssignEmployeeComponent,
+    canActivate: [loggedIn]
   },
     {
     path: 'leave/:id',
-    component: LeaveComponent
+    component: LeaveComponent,
+    canActivate: [loggedIn, employeeGuard]
   },
   {
     path: 'myStatus/:id',
-    component: MyStatusComponent
+    component: MyStatusComponent,
+    canActivate: [loggedIn, employeeGuard]
   },
    {
     path: 'leaveApplication/:id',
-    component: LeaveApplicationComponent
+    component: LeaveApplicationComponent,
+    canActivate: [loggedIn, managerGuard]
   }
 ];
 @NgModule({

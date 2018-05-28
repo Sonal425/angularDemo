@@ -11,9 +11,10 @@ import {FormGroup,FormControl,Validators,FormBuilder} from '@angular/forms';
 export class EmployeeComponent implements OnInit {
   id:any;
   project:any;
-  applications=[];
+  applications:any;
   show="no";
   manager=[];
+  href:string;
   statusForm : FormGroup=new FormGroup({
   to:new FormControl(null,Validators.required),
   statusDate :new FormControl(null, Validators.required),
@@ -32,7 +33,7 @@ export class EmployeeComponent implements OnInit {
     this._user.myLeave(this.id)
     .subscribe(
        data=>{
-        this.applications=data['data'];    
+        this.applications=data;    
       },
       error=>console.log(error)
     )
@@ -55,6 +56,7 @@ export class EmployeeComponent implements OnInit {
   ngOnInit() {  
   }
   logout(){
+     sessionStorage.setItem('login', 'false');
     this._user.logout()
     .subscribe(
       data=>this.router.navigate(['/login']),

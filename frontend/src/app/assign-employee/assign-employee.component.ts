@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from '../user.service';
 import { RouterModule, Router,ActivatedRoute } from '@angular/router';
 import {FilterArray} from '../filter';
-import { Pipe, PipeTransform} from '@angular/core';
+// import { Pipe, PipeTransform} from '@angular/core';
 @Component({
   selector: 'app-assign-employee',
   templateUrl: './assign-employee.component.html',
@@ -10,15 +10,17 @@ import { Pipe, PipeTransform} from '@angular/core';
   
 })
 export class AssignEmployeeComponent implements OnInit {
+  intial="yes";
   users=[{}];
   name=[];
   email=[];
   projectid:any;
+  searchText:string;
+  filterValue:any;
   constructor(private route: ActivatedRoute, private _user:UserService, private router:Router) {
     this._user.showEmployee()
     .subscribe(
       data=>{
-        console.log(data); 
         this.users=data['data'];
         var count= Object.keys(this.users).length;
         for(var i=0;i<this.users.length;i++){
@@ -33,8 +35,7 @@ export class AssignEmployeeComponent implements OnInit {
     this.projectid= this.route.snapshot.params['id'];
   } 
   assign(employeeid, name){
-    console.log(this.projectid+" "+employeeid)
-        if(confirm("Assign this project to "+name)) {
+    if(confirm("Assign this project to "+name)) {
       this._user.assign(this.projectid,employeeid)
       .subscribe(
         data => {
@@ -44,6 +45,22 @@ export class AssignEmployeeComponent implements OnInit {
         }
       );
     }  
-
   }
+
+  search(){
+    this.intial="no";
+    this._user.search(this.searchText)
+      .subscribe(
+        data => {
+          this.filterValue=data;
+          if(this.filterValue.length==0){
+            alert("no matching result");
+            this.intial='yes';
+          }
+          },
+          (err) => {
+          console.log(err);
+        }
+      );
+    }  
 }

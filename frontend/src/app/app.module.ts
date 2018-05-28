@@ -13,6 +13,10 @@ import { AdminComponent } from './admin/admin.component';
 import { EmployeeComponent } from './employee/employee.component';
 import { ManagerComponent } from './manager/manager.component';
 import {loggedIn } from './guards';
+import {notloggedIn } from './guards';
+import {adminGuard } from './guards';
+import {managerGuard } from './guards';
+import {employeeGuard } from './guards';
 import { EditComponent } from './edit/edit.component';
 import { AddTaskComponent } from './add-task/add-task.component';
 import { AssignEmployeeComponent } from './assign-employee/assign-employee.component';
@@ -44,9 +48,9 @@ import { MyStatusComponent } from './my-status/my-status.component';
     FormsModule ,
     ReactiveFormsModule,
     HttpClientModule,
-    RouterModule    
+    RouterModule,  
   ],
-  providers: [UserService, loggedIn],
+  providers: [UserService, loggedIn, notloggedIn, adminGuard,employeeGuard, managerGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
