@@ -22,7 +22,7 @@ export class LeaveComponent implements OnInit {
   });
 
   constructor(private route: ActivatedRoute, private _user:UserService, private router:Router) { 
-    this._user.showManager()
+    this._user.showManagers()
     .subscribe(
       data=>{
         this.manager=data['data'];

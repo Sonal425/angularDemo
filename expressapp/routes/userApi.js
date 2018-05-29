@@ -4,11 +4,11 @@ var User = require('../models/user');
 var Project = require('../models/project');
 var leave = require('../models/leave');
 var status = require('../models/status');
+var notifications = require('../models/notifications');
 var employee_project =require('../models/employee_project');
 var passport = require('passport');
 var mongoose = require('mongoose');
 var Promise = require('promise');
-var Q=require('q');
 
 router.post('/register', function (req, res, next) {
   addToDB(req, res);
@@ -28,7 +28,6 @@ router.post('/login',function(req,res,next){
 
 router.get('/admin',function(req, res,next){
   var adminLogin = mongoose.model("User");
-  var show;
   adminLogin.find({}, function(err, data){ 
     return res.status(200).json({data});    
   });
@@ -54,22 +53,12 @@ router.get('/search',function(req, res,next){
   );
 });
 
-router.get('/showProject',function(req, res,next){
+router.get('/showAllProjects',function(req, res,next){
   var project = mongoose.model("Project");
-  var show;
   project.find({}, function(err, data){  
     return res.status(200).json({data});    
   });
 });
-//  router.get('/register',function(req,res,next){
-//   var auth;
-//  if(! req.isAuthenticated()) 
-//   auth="allowed";
-//   else
-//     auth="not"
-// console.log(auth)
-//   return res.json(auth);
-// });
     
 router.get('/logout', function(req,res,next){
   req.logout();
@@ -83,21 +72,49 @@ router.delete('/admin', function(req, res, next) {
   });
 });
 
-router.put('/edit/:id', function(req, res, next) {
+router.put('/editUser/:id', function(req, res, next) {
   User.findByIdAndUpdate(req.params.id, req.body,function (err, post) {
     if (err) return next(err);
     res.json(post);
   });
 });
 
-router.get('/getuser/:id', function(req, res, next) {
+router.get('/getusers/:id', function(req, res, next) {
   User.findById(req.params.id, function (err, post) {
     if (err) return next(err);
     res.json(post);
   });
 });
+router.get('/getNotifications/:id', function(req, res, next) {
+  var notifications = mongoose.model("notifications");
+  notifications.aggregate([
+    { $lookup:{
+      from:"users",
+      localField:"from",
+      foreignField:"_id",
+      as:"sendBy" 
+      } 
+    },   
+   { $lookup:{
+      from:"users",
+      localField:"to",
+      foreignField:"_id",
+      as:"sendTo" 
+      } 
+    }, 
+    { $sort: {sentDate: -1 }}, 
+    { $match : { 
+        'to':  mongoose.Types.ObjectId(req.params.id)
+      }
+    }
+  ]).exec().then(function(data) {
+      return res.json(data)
+    }).catch(function(err){
+    console.log(err)
+  })
+});
 
-router.get('/showEmployee',function(req, res,next){
+router.get('/showEmployees',function(req, res,next){
   var emp = mongoose.model("User");
   emp.find({ 'type': 'employee' }, '_id email name technology', function(err, data){ 
     if (err) return next(err);
@@ -105,17 +122,19 @@ router.get('/showEmployee',function(req, res,next){
   });
 });
 
-router.get('/showManager',function(req, res,next){
+router.get('/showManagers',function(req, res,next){
   var emp = mongoose.model("User");
   emp.find({ 'type': 'manager' }, 'name _id', function(err, data){ 
     if (err) return next(err);
     return res.status(200).json({data});    
   });
 });
-router.get('/showLeaveApplication/:id',function(req, res,next){
+
+router.get('/showLeaveApplications/:id',function(req, res,next){
   var emp = mongoose.model("applyleaves");
   emp.aggregate([
-    { $lookup:{
+    { 
+      $lookup:{
         from:"users",
         localField:"employeeId",
         foreignField:"_id",
@@ -129,44 +148,33 @@ router.get('/showLeaveApplication/:id',function(req, res,next){
     { $sort: {fromDate: -1 }
     }
      ]).exec().then(function(data) {
-      console.log(data)
       return res.json(data)
     }).catch(function(err){
-        console.log(err)
-      })
-
-  // emp.find({ 'applyTo': req.params.id },function(err, data){ 
-  //   if (err) return next(err);
-  //   return res.status(200).json({data});    
-  // });
+      console.log(err)
+  })
 });
 
 router.get('/myLeave/:id',function(req, res,next){
   var emp = mongoose.model("applyleaves");
-    emp.aggregate([
-    { $lookup:{
-        from:"users",
-        localField:"applyTo",
-        foreignField:"_id",
-        as:"manager" 
-      } 
-    },   
-    { $match : { 
-      'employeeId':  mongoose.Types.ObjectId(req.params.id)
-      }
-    },
-    { $sort: {fromDate: -1 }
+  emp.aggregate([
+  { $lookup:{
+    from:"users",
+    localField:"applyTo",
+    foreignField:"_id",
+    as:"manager" 
+    } 
+  },   
+  { $match : { 
+    'employeeId':  mongoose.Types.ObjectId(req.params.id)
     }
-     ]).exec().then(function(data) {
-      console.log(data)
-      return res.json(data)
-    }).catch(function(err){
-        console.log(err)
-      })
-  // emp.find({ 'employeeId': req.params.id },function(err, data){ 
-  //   if (err) return next(err);
-  //   return res.status(200).json({data});    
-  // });
+  },
+  { $sort: {fromDate: -1 }
+  }
+  ]).exec().then(function(data) {
+    return res.json(data)
+  }).catch(function(err){
+    console.log(err)
+  })
 });
 
 router.get('/myStatus/:id',function(req, res,next){
@@ -186,7 +194,6 @@ router.get('/myStatus/:id',function(req, res,next){
     { $sort: {statusDate: -1 }
     }     
   ]).exec().then(function(data) {
-      console.log(data)
       return res.json(data)
     }).catch(function(err){
         console.log(err)
@@ -203,16 +210,16 @@ router.get('/myStatus/:id',function(req, res,next){
 // });
 router.get('/allStatus/:id',function(req, res,next){
   var status = mongoose.model("status");
-status.aggregate([
+  status.aggregate([
     { $lookup:{
-        from:"users",
-        localField:"employeeId",
-        foreignField:"_id",
-        as:"employee" 
+      from:"users",
+      localField:"employeeId",
+      foreignField:"_id",
+      as:"employee" 
       } 
     },   
     { $match : { 
-      'to':  mongoose.Types.ObjectId(req.params.id)
+        'to':  mongoose.Types.ObjectId(req.params.id)
       }
     },
     { $sort: {statusDate: -1 }
@@ -220,8 +227,8 @@ status.aggregate([
   ]).exec().then(function(data) {
       return res.json(data)
     }).catch(function(err){
-        console.log(err)
-      })
+    console.log(err)
+  })
 
   // emp.find({ 'to': req.params.id },null,{ sort:
   //       {statusDate: -1 //Sort by Date Added DESC
@@ -244,6 +251,34 @@ router.put('/leaveAction/:id', function(req, res, next) {
   leave.findByIdAndUpdate(req.params.id, req.body.params,function (err, post) {
     if (err) return next(err);
     res.json(post);
+    var emp = mongoose.model("applyleaves");
+     emp.aggregate([
+    { $lookup:{
+      from:"users",
+      localField:"employeeId",
+      foreignField:"_id",
+      as:"from" 
+      } 
+    },   
+    { $lookup:{
+      from:"users",
+      localField:"applyTo",
+      foreignField:"_id",
+      as:"to" 
+      } 
+    },   
+    { $match : { 
+        '_id':  mongoose.Types.ObjectId(req.params.id)
+      }
+    }
+  ]).exec().then(function(data) {
+    addNotification(data[0].from[0]._id,data[0].to[0]._id,"has "+data[0].status+" your leave application", res);
+      return res.json(data)
+    }).catch(function(err){
+    console.log(err)
+  })
+
+    // addNotification(,"has "+req.body.params.status+" your leave application")
   });
 });
 
@@ -272,29 +307,25 @@ router.put('/leaveAction/:id', function(req, res, next) {
 //   })
 // }
 router.get('/getAssignedProject/:id', async function(req,res){
-  // var detail=[];
-  // await showprojects(req,res);
-  // console.log(detail)
-  var MongoClient = require('mongodb').MongoClient;
-  var url = "mongodb://localhost";
-  MongoClient.connect(url, function(err, db) {
-    if (err) throw err;
-    var dbo = db.db("assignment");
-    dbo.collection('employee_projects').aggregate([
-      { $lookup:
-        {
-          from: 'projects',
-          localField: 'projectId',
-          foreignField: '_id',
-          as: 'projectdetails'
-        }
+  var myProjects = mongoose.model("employee_project");
+  myProjects.aggregate([
+    {$lookup:
+      {
+        from: 'projects',
+        localField: 'projectId',
+        foreignField: '_id',
+        as: 'projectdetails'
       }
-    ]).toArray(function(err, data) {
-      if (err) throw err;;
-      // db.close();
-      return res.json(data); 
-    });
-  });
+    },   
+    { $match : { 
+      'employeeId':  mongoose.Types.ObjectId(req.params.id)
+      }
+    }   
+  ]).exec().then(function(data) {
+    return res.json(data)
+  }).catch(function(err){
+    console.log(err)
+  })
 })
 
 router.post("/sendStatus",function(req,res){
@@ -351,7 +382,6 @@ async function addToDB(req, res) {
   }
 }
 async function applyleave(req, res) {
-console.log(req)
   var apply = new leave({
     employeeId: req.query.employeeid,
     leaveType: req.body.leaveType,
@@ -366,6 +396,7 @@ console.log(req)
 
   try {
     doc =  apply.save();
+    addNotification(req.body.applyTo, req.query.employeeid,"has applied for the leave",res)
     return res.status(201).json(doc);
   }
   catch (err) {
@@ -390,6 +421,24 @@ async function sendStatus(req, res) {
 
   try {
     doc =  Status.save();
+    addNotification(req.body.to,req.query.employeeid,"has sent the status",res)
+    return res.status(201).json(doc);
+  }
+  catch (err) {
+    return res.status(501).json(err);
+  }
+  
+}
+async function addNotification(to,from, message,res){
+  var notify=new notifications({
+     to: to,
+     from: from,
+     message:message,
+     status:"unread",
+     sentDate: Date.now()
+  })
+  try {
+    doc =  notify.save();
     return res.status(201).json(doc);
   }
   catch (err) {

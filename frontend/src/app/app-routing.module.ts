@@ -58,7 +58,7 @@ const routes: Routes = [
     path: 'edit/:id',
     component: EditComponent,
     data: { title: 'Edit' },
-    canActivate: [loggedIn, adminGuard]
+    canActivate: [loggedIn]
   },
   {
     path: 'addTask/:id',

@@ -13,9 +13,10 @@ export class ManagerComponent implements OnInit {
   project=[{}];
   id:any;
   status:any;
+  notifications:any;
   constructor(private route: ActivatedRoute,private _user:UserService, private _router:Router) {
     this.id= this.route.snapshot.params['id'];
-    this._user.showProject()
+    this._user.showAllProjects()
     .subscribe(
       data=> this.project=data['data'],
       error=>console.log(error)
@@ -24,6 +25,14 @@ export class ManagerComponent implements OnInit {
     .subscribe(
        data=>{
         this.status=data;
+      },
+      error=>console.log(error)
+    )
+    this._user.getNotifications(this.id)
+    .subscribe(
+       data=>{
+        this.notifications=data;
+        console.log(this.notifications);
       },
       error=>console.log(error)
     )

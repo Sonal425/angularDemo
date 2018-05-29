@@ -12,7 +12,7 @@ export class LeaveApplicationComponent implements OnInit {
   applications:any;
   constructor(private route: ActivatedRoute,private _user:UserService, private router:Router) { 
    this.id= this.route.snapshot.params['id'];
-    this._user.showLeaveApplication(this.id)
+    this._user.showLeaveApplications(this.id)
     .subscribe(
       data=>{
         this.applications=data;    

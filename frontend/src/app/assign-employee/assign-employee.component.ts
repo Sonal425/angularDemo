@@ -18,7 +18,7 @@ export class AssignEmployeeComponent implements OnInit {
   searchText:string;
   filterValue:any;
   constructor(private route: ActivatedRoute, private _user:UserService, private router:Router) {
-    this._user.showEmployee()
+    this._user.showEmployees()
     .subscribe(
       data=>{
         this.users=data['data'];
@@ -34,9 +34,9 @@ export class AssignEmployeeComponent implements OnInit {
   ngOnInit() {
     this.projectid= this.route.snapshot.params['id'];
   } 
-  assign(employeeid, name){
+  assignProject(employeeid, name){
     if(confirm("Assign this project to "+name)) {
-      this._user.assign(this.projectid,employeeid)
+      this._user.assignProject(this.projectid,employeeid)
       .subscribe(
         data => {
           this.router.navigate(["/manager"]);},

@@ -20,7 +20,7 @@ export class AdminComponent implements OnInit {
 
   constructor(private _user:UserService, private _router:Router,private location: Location) { 
     this._user.isLoggedIn=true;
-    this._user.showUser()
+    this._user.showAllUsers()
     .subscribe(
       data=> this.users=data['data'],
       error=>console.log(error)
@@ -36,9 +36,9 @@ export class AdminComponent implements OnInit {
       error=>console.error(error)
     )
   }
-  delete(id, name) {
+  deleteUser(id, name) {
      if(confirm("Are you sure to delete "+name)) {
-      this._user.delete(id)
+      this._user.deleteUser(id)
       .subscribe(
         data => {
         window.location.reload(true);},

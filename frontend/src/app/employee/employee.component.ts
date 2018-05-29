@@ -15,6 +15,7 @@ export class EmployeeComponent implements OnInit {
   show="no";
   manager=[];
   href:string;
+  notifications:any;
   statusForm : FormGroup=new FormGroup({
   to:new FormControl(null,Validators.required),
   statusDate :new FormControl(null, Validators.required),
@@ -44,14 +45,23 @@ export class EmployeeComponent implements OnInit {
       },
       error=>console.log(error)
     )
-    this._user.showManager()
+    this._user.showManagers()
     .subscribe(
       data=>{
         this.manager=data['data']; 
       },
       error=>console.log(error)
     )
+     this._user.getNotifications(this.id)
+    .subscribe(
+       data=>{
+        this.notifications=data;
+        console.log(this.notifications);
+      },
+      error=>console.log(error)
+    )
   }
+  
 
   ngOnInit() {  
   }

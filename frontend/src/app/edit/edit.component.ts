@@ -20,21 +20,21 @@ export class EditComponent implements OnInit {
 
   ngOnInit() {
     this.id= this.route.snapshot.params['id'];
-    this.getuser(this.id);
+    this.getusers(this.id);
   }
   
-  getuser(id) {
-    this._user.getuser(id).subscribe(data => {
+  getusers(id) {
+    this._user.getusers(id).subscribe(data => {
       this.user = data;
     });
   }
 
- edit(id){
+ editUser(id){
     if(!this.editForm.valid){
       alert('Invalid Form'); return;
     }
     if(confirm("Are you sure to update "+this.user['username'])) {
-      this._user.edit(id,JSON.stringify(this.editForm.value))
+      this._user.editUser(id,JSON.stringify(this.editForm.value))
       .subscribe(
         data => {
           this.router.navigate(["/admin"]);},

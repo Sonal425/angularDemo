@@ -4,14 +4,14 @@ var Schema = mongoose.Schema;
 var bcrypt = require('bcrypt');
 var ObjectId = mongoose.Schema.Types.ObjectId;
 var schema = new Schema({
-    to: {type:ObjectId, require:true},
-    employeeId:{type:ObjectId, require:true},
+    to: {type:ObjectId, require:true,ref: 'User'},
+    employeeId:{type:ObjectId, require:true,ref: 'User'},
     statusDate: {type:Date, require:true},
     inTime : {type:String, require:true},
     outTime:{type:String, require:true},
     breakTime:{type:String, require:true},
     type : {type:String, require:true},
-    projectName:{type:String, require:true},
+    projectName:{type:String, require:true,ref:'Project'},
     workTime:{type:String, require:true},
     status:{type:String, require:true},
     task:{type:String, require:true},

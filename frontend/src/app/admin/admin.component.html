@@ -17,7 +17,7 @@
           <td>{{details.username}}</td>
           <td>{{details.type}}</td>  
           <td >
-            <button class="btn btn-danger" (click)="delete(details._id, details.username)">Delete</button>
+            <button class="btn btn-danger" (click)="deleteUser(details._id, details.username)">Delete</button>
             <a [routerLink]="['/edit', details._id]" class="btn btn-success">EDIT</a>  
          </td>
       </tr>

@@ -20,7 +20,7 @@ export class UserService {
       headers:new HttpHeaders().append('Content-Type','application/json')
     });
   }
-   showUser(){
+  showAllUsers(){
         // this.isLoggedIn=true;
     return this._http.get('http://127.0.0.1:3000/userApi/admin',{
       observe:'body',
@@ -43,13 +43,13 @@ export class UserService {
     })
   }
 
-  delete(id:any){
+  deleteUser(id:any){
     let params = new HttpParams();
        params = params.append('id', id);
     return this._http.delete('http://127.0.0.1:3000/userApi/admin',{params})
   }
-  edit(id:any, body:any){
-    return this._http.put('http://127.0.0.1:3000/userApi/edit/'+id, body,{
+  editUser(id:any, body:any){
+    return this._http.put('http://127.0.0.1:3000/userApi/editUser/'+id, body,{
       observe:'body',
       // withCredentials:true,
       headers:new HttpHeaders().append('Content-Type','application/json')
@@ -61,35 +61,35 @@ export class UserService {
       headers:new HttpHeaders().append('Content-Type','application/json')
     });
   }
-  getuser(id:any){
-    return this._http.get('http://127.0.0.1:3000/userApi/getuser/'+id,{
+  getusers(id:any){
+    return this._http.get('http://127.0.0.1:3000/userApi/getusers/'+id,{
       observe:'body',
       // withCredentials:true,
       headers:new HttpHeaders().append('Content-Type','application/json')
     })
   }
-  showProject(){
-    return this._http.get('http://127.0.0.1:3000/userApi/showProject',{
+  showAllProjects(){
+    return this._http.get('http://127.0.0.1:3000/userApi/showAllProjects',{
       observe:'body',
       // withCredentials:true,
       headers:new HttpHeaders().append('Content-Type','application/json')
     });
   }
-  showEmployee(){
-    return this._http.get('http://127.0.0.1:3000/userApi/showEmployee',{
+  showEmployees(){
+    return this._http.get('http://127.0.0.1:3000/userApi/showEmployees',{
       observe:'body',
       // withCredentials:true,
       headers:new HttpHeaders().append('Content-Type','application/json')
     })
   }
-   showManager(){
-    return this._http.get('http://127.0.0.1:3000/userApi/showManager',{
+   showManagers(){
+    return this._http.get('http://127.0.0.1:3000/userApi/showManagers',{
       observe:'body',
       // withCredentials:true,
       headers:new HttpHeaders().append('Content-Type','application/json')
     })
   }
-  assign(projectid:any,employeeid:any){
+  assignProject(projectid:any,employeeid:any){
      return this._http.post('http://127.0.0.1:3000/userApi/assignProject',{
       params:{employeeid:employeeid, projectid:projectid},
       observe:'body',
@@ -103,14 +103,6 @@ export class UserService {
       headers:new HttpHeaders().append('Content-Type','application/json')
     });
   }
-  showAssignedProject(id:any){
-    return this._http.get('http://127.0.0.1:3000/userApi/showAssignedProject',{
-      params:{ projectid : id},
-      observe:'body',
-      // withCredentials:true,
-      headers:new HttpHeaders().append('Content-Type','application/json')
-    });
-  }
   applyleave(id:any,body:any){
      return this._http.post('http://127.0.0.1:3000/userApi/applyleave',body,{
       params:{ employeeid : id, status: "unread"},
@@ -119,8 +111,8 @@ export class UserService {
       headers:new HttpHeaders().append('Content-Type','application/json')
     });
   }
-  showLeaveApplication(id:any){
-    return this._http.get('http://127.0.0.1:3000/userApi/showLeaveApplication/'+id,{
+  showLeaveApplications(id:any){
+    return this._http.get('http://127.0.0.1:3000/userApi/showLeaveApplications/'+id,{
       observe:'body',
       // withCredentials:true,
       headers:new HttpHeaders().append('Content-Type','application/json')
@@ -166,6 +158,13 @@ export class UserService {
   search(searchKeyword:any){
     return this._http.get('http://127.0.0.1:3000/userApi/search',{
       params:{keyword:searchKeyword},
+      observe:'body',
+      // withCredentials:true,
+      headers:new HttpHeaders().append('Content-Type','application/json')
+    });
+  }
+  getNotifications(id:any){
+    return this._http.get('http://127.0.0.1:3000/userApi/getNotifications/'+id,{
       observe:'body',
       // withCredentials:true,
       headers:new HttpHeaders().append('Content-Type','application/json')
