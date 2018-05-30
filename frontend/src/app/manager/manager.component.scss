@@ -1,13 +1,17 @@
 .dropdown-menu{
   width:400px;
   overflow-y: auto;
-height: 400px;
-  
+  height: 400px; 
 }
-
 .dropdown-menu .card{
   margin: 2%;
 }
 .unread{
   background: #D8D8D8;
+}
+.fa-check-circle-o{
+  float: right;
+}
+.read{
+  background: #fff;
 }

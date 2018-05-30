@@ -170,4 +170,26 @@ export class UserService {
       headers:new HttpHeaders().append('Content-Type','application/json')
     });
   }
+  markNotificationRead(id){
+    return this._http.put('http://127.0.0.1:3000/userApi/markNotificationRead/'+id,{
+      params:{status:"read"},
+      observe:'body',
+      // withCredentials:true,
+      headers:new HttpHeaders().append('Content-Type','application/json')
+    })
+  }
+  markAllNotificationsRead(id){
+    return this._http.put('http://127.0.0.1:3000/userApi/markAllNotificationsRead/'+id,{
+      observe:'body',
+      // withCredentials:true,
+      headers:new HttpHeaders().append('Content-Type','application/json')
+    })
+  }
+  countUnreadNotifications(id:any){
+    return this._http.get('http://127.0.0.1:3000/userApi/countUnreadNotifications/'+id,{
+      observe:'body',
+      // withCredentials:true,
+      headers:new HttpHeaders().append('Content-Type','application/json')
+    });
+  }
 }

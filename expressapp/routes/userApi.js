@@ -12,6 +12,7 @@ var Promise = require('promise');
 
 router.post('/register', function (req, res, next) {
   addToDB(req, res);
+  sendVerificationMail(req,res);
 });
 
 router.post('/login',function(req,res,next){
@@ -27,6 +28,7 @@ router.post('/login',function(req,res,next){
 });
 
 router.get('/admin',function(req, res,next){
+   
   var adminLogin = mongoose.model("User");
   adminLogin.find({}, function(err, data){ 
     return res.status(200).json({data});    
@@ -76,6 +78,28 @@ router.put('/editUser/:id', function(req, res, next) {
   User.findByIdAndUpdate(req.params.id, req.body,function (err, post) {
     if (err) return next(err);
     res.json(post);
+  });
+});
+
+router.put('/markNotificationRead/:id', function(req, res, next) {
+  notifications.findByIdAndUpdate(req.params.id, req.body.params,function (err, post) {
+    if (err) return next(err);
+    res.json(post);
+  });
+});
+
+router.put('/markAllNotificationsRead/:id', function(req, res, next) {
+  console.log(req.params.id)
+  notifications.update({'to':req.params.id, "status":"unread"}, {$set:{"status":"read"}},{multi:true},function (err, post) {
+    if (err) return next(err);
+    res.json(post);
+  });
+});
+router.get('/countUnreadNotifications/:id',function(req, res, next) {
+  notifications.find({'to':req.params.id, 'status':"unread"}).exec(function (err, results) {
+    var count = results.length
+    if (err) return next(err);
+    res.json(count);
   });
 });
 
@@ -444,6 +468,39 @@ async function addNotification(to,from, message,res){
   catch (err) {
     return res.status(501).json(err);
   }
+}
+async function sendVerificationMail(req,res){
+  var a=req.body.email;
+  var nodemailer = require('nodemailer');
+   rand=Math.floor((Math.random() * 100) + 54);
+    host=req.body.email;
+   var arr = a.split("@").map(function (val) { return +val + 1; });
+    console.log(arr[0])
+    link="http://"+arr[0]+"/verify?id="+rand;
+
+var transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'sonal425chouhan@gmail.com',
+    pass: ''
+  }
+});
+
+var mailOptions = {
+  from: 'schouhan@bestpeers.com',
+  to: 'sonal425chouhan@gmail.com',
+  subject : "Please confirm your Email account",
+  html : "Hello,<br> Please Click on the link to verify your email.<br><a href="+link+">Click here to verify</a>" 
+    
+};
+
+transporter.sendMail(mailOptions, function(error, info){
+  if (error) {
+    console.log(error);
+  } else {
+    console.log('Email sent: ' + info.response);
+  }
+});
 }
 
 module.exports = router;

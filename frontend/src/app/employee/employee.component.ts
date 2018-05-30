@@ -16,6 +16,7 @@ export class EmployeeComponent implements OnInit {
   manager=[];
   href:string;
   notifications:any;
+  unreadNotifications:any;
   statusForm : FormGroup=new FormGroup({
   to:new FormControl(null,Validators.required),
   statusDate :new FormControl(null, Validators.required),
@@ -52,14 +53,9 @@ export class EmployeeComponent implements OnInit {
       },
       error=>console.log(error)
     )
-     this._user.getNotifications(this.id)
-    .subscribe(
-       data=>{
-        this.notifications=data;
-        console.log(this.notifications);
-      },
-      error=>console.log(error)
-    )
+    this.loadNotifications();
+    this.countUnreadNotifications();
+
   }
   
 
@@ -83,4 +79,41 @@ export class EmployeeComponent implements OnInit {
       error=>console.log(error)
     )
   }
+read(status, id){
+    if(status=="unread"){
+      this._user.markNotificationRead(id)
+    .subscribe(
+        error=>console.log(error)
+      )
+      this.loadNotifications();
+      this.countUnreadNotifications();
+    }
+  }
+  readAll(){
+      this._user.markAllNotificationsRead(this.id)
+    .subscribe(
+        error=>console.log(error)
+      )
+    this.loadNotifications();
+    this.countUnreadNotifications();  
+  }
+  loadNotifications(){
+     this._user.getNotifications(this.id)
+    .subscribe(
+       data=>{
+        this.notifications=data;
+        console.log(this.notifications);
+      },
+      error=>console.log(error)
+    )
+  }
+  countUnreadNotifications(){
+    this._user.countUnreadNotifications(this.id)
+    .subscribe(
+      data=>{this.unreadNotifications=data;
+        console.log(this.unreadNotifications)},
+      error=>console.log(error)
+      )
+  }
 }
+

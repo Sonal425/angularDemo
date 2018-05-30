@@ -3,14 +3,15 @@
 <a  href="" data-toggle="modal" data-target="#leavehistory" >Leave History</a>   &nbsp; &nbsp;&nbsp; &nbsp;
 <a  href="" data-toggle="modal" data-target="#status" >Send Status</a> &nbsp; &nbsp;&nbsp; &nbsp;
 <a [routerLink]="['/myStatus', id]">My Status History</a>    &nbsp; &nbsp;
-<a   href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"  aria-haspopup="true" aria-expanded="false">Notifications<span class="badge badge-danger">2</span></a>   
-<div class="dropdown-menu" >
-  <button class="dropdown-item" href="" class="btn btn-light text-primary" data-toggle="dropdown"> <h6><small>Mark all as Read</small></h6></button>
+<a   href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"  aria-haspopup="true" aria-expanded="false">Notifications<span class="badge badge-danger" *ngIf="unreadNotifications!=0">{{unreadNotifications}}</span></a>   
+<div class="dropdown-menu" (click)="$event.stopPropagation()">
+  <button class="dropdown-item" href="" class="btn btn-light text-primary" data-toggle="dropdown" (click)="readAll()"> <h6><small>Mark all as Read</small></h6></button>
    <div class="card " *ngFor="let details of notifications">
-    <div class="card-body {{details.status}}">{{details.sendBy[0].name}} {{details.message}}</div>
+      <div class="card-body {{details.status}}" (click)="read(details.status,details._id)">
+        {{details.sendBy[0].name}} {{details.message}}
+      </div>
   </div>
 </div>
-
 <div class="container">
   <table class="table ">
       <thead class="thead-dark">
