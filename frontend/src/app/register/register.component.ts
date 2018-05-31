@@ -11,8 +11,8 @@ import { Component, OnInit } from '@angular/core';
 })
 
 export class RegisterComponent implements OnInit {
-  show="no";
-  skills=[{skills:"angular"},{skills:"nodejs"},{skills:"mongodb"},{skills:"html"},{skills:"java"}]
+  show:string="no";
+  skills:Array<any>=[{skills:"angular"},{skills:"nodejs"},{skills:"mongodb"},{skills:"html"},{skills:"java"}]
   registerForm:FormGroup = new FormGroup({
   
   })

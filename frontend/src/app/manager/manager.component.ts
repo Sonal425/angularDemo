@@ -10,9 +10,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./manager.component.scss']
 })
 export class ManagerComponent implements OnInit {
-  public isCollapsed = true;
-  project=[{}];
-  id:any;
+  project:Array<any>=[{}];
+  id:string;
   status:any;
   notifications:any;
   unreadNotifications:any;

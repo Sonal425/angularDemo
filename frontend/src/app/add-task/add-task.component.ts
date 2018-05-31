@@ -13,8 +13,8 @@ import { Observable } from 'rxjs/Observable';
 export class AddTaskComponent implements OnInit {
   filesToUpload: File;
   url="";
-  id:any;
-  skills=[{skills:"angular"},{skills:"nodejs"},{skills:"mongodb"},{skills:"html"},{skills:"java"}]
+  id:string;
+  skills:Array<any>=[{skills:"angular"},{skills:"nodejs"},{skills:"mongodb"},{skills:"html"},{skills:"java"}]
   addTaskForm : FormGroup;
   
   constructor(private route: ActivatedRoute ,private router: Router, private _user:UserService,private http: HttpClient,private fb: FormBuilder) { 

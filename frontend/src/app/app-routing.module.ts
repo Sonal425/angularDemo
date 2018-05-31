@@ -17,6 +17,7 @@ import {employeeGuard } from './guards';
 import {managerGuard } from './guards';
 import { LeaveApplicationComponent } from './leave-application/leave-application.component';
 import { MyStatusComponent } from './my-status/my-status.component';
+import { VerifyComponent } from './verify/verify.component';
 
 const routes: Routes = [
   {
@@ -84,6 +85,10 @@ const routes: Routes = [
     path: 'leaveApplication/:id',
     component: LeaveApplicationComponent,
     canActivate: [loggedIn, managerGuard]
+  },
+   {
+    path: 'verify/:id',
+    component: VerifyComponent
   }
 ];
 @NgModule({

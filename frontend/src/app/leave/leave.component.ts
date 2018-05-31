@@ -9,8 +9,8 @@ import { RouterModule, Router,ActivatedRoute } from '@angular/router';
   styleUrls: ['./leave.component.scss']
 })
 export class LeaveComponent implements OnInit {
-  manager=[];
-  employeeid:any;
+  manager:Array<any>=[];
+  employeeid:string;
   leaveForm : FormGroup=new FormGroup({
   leaveType:new FormControl(null,Validators.required),
   fromDate :new FormControl(null, Validators.required),

@@ -10,11 +10,11 @@ import {FilterArray} from '../filter';
   
 })
 export class AssignEmployeeComponent implements OnInit {
-  intial="yes";
-  users=[{}];
-  name=[];
-  email=[];
-  projectid:any;
+  intial:string="yes";
+  users:Array<any>=[{}];
+  name:Array<string>=[];
+  email:Array<string>=[];
+  projectid:string;
   searchText:string;
   filterValue:any;
   constructor(private route: ActivatedRoute, private _user:UserService, private router:Router) {

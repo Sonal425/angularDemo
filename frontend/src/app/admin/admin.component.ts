@@ -12,8 +12,8 @@ import { Location } from '@angular/common';
 })
 export class AdminComponent implements OnInit {
   users:any;
-  show = false;
-   editForm : FormGroup=new FormGroup({
+  show:boolean= false;
+  editForm : FormGroup=new FormGroup({
   username:new FormControl(null,Validators.required),
   type:new FormControl(null, Validators.required)
   });

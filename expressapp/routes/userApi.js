@@ -9,6 +9,14 @@ var employee_project =require('../models/employee_project');
 var passport = require('passport');
 var mongoose = require('mongoose');
 var Promise = require('promise');
+var nodemailer = require('nodemailer');
+var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'sonal425chouhan@gmail.com',
+      pass: ''
+    }
+  });
 
 router.post('/register', function (req, res, next) {
   addToDB(req, res);
@@ -139,24 +147,24 @@ router.get('/getNotifications/:id', function(req, res, next) {
 });
 
 router.get('/showEmployees',function(req, res,next){
-  var emp = mongoose.model("User");
-  emp.find({ 'type': 'employee' }, '_id email name technology', function(err, data){ 
+  var user= mongoose.model("User");
+  user.find({ 'type': 'employee' }, '_id email name technology', function(err, data){ 
     if (err) return next(err);
     return res.status(200).json({data});    
   });
 });
 
 router.get('/showManagers',function(req, res,next){
-  var emp = mongoose.model("User");
-  emp.find({ 'type': 'manager' }, 'name _id', function(err, data){ 
+  var user = mongoose.model("User");
+  user.find({ 'type': 'manager' }, 'name _id', function(err, data){ 
     if (err) return next(err);
     return res.status(200).json({data});    
   });
 });
 
 router.get('/showLeaveApplications/:id',function(req, res,next){
-  var emp = mongoose.model("applyleaves");
-  emp.aggregate([
+  var leave= mongoose.model("applyleaves");
+  leave.aggregate([
     { 
       $lookup:{
         from:"users",
@@ -179,8 +187,8 @@ router.get('/showLeaveApplications/:id',function(req, res,next){
 });
 
 router.get('/myLeave/:id',function(req, res,next){
-  var emp = mongoose.model("applyleaves");
-  emp.aggregate([
+  var leave = mongoose.model("applyleaves");
+  leave.aggregate([
   { $lookup:{
     from:"users",
     localField:"applyTo",
@@ -275,8 +283,8 @@ router.put('/leaveAction/:id', function(req, res, next) {
   leave.findByIdAndUpdate(req.params.id, req.body.params,function (err, post) {
     if (err) return next(err);
     res.json(post);
-    var emp = mongoose.model("applyleaves");
-     emp.aggregate([
+    var leave= mongoose.model("applyleaves");
+     leave.aggregate([
     { $lookup:{
       from:"users",
       localField:"employeeId",
@@ -297,6 +305,7 @@ router.put('/leaveAction/:id', function(req, res, next) {
     }
   ]).exec().then(function(data) {
     addNotification(data[0].from[0]._id,data[0].to[0]._id,"has "+data[0].status+" your leave application", res);
+    emailNotification(data[0].from[0]._id,data[0].to[0]._id,"has "+data[0].status+" your leave application");
       return res.json(data)
     }).catch(function(err){
     console.log(err)
@@ -420,7 +429,8 @@ async function applyleave(req, res) {
 
   try {
     doc =  apply.save();
-    addNotification(req.body.applyTo, req.query.employeeid,"has applied for the leave",res)
+    addNotification(req.body.applyTo, req.query.employeeid,"has applied for the leave",res);
+    emailNotification(req.body.applyTo, req.query.employeeid,"has applied for the leave");
     return res.status(201).json(doc);
   }
   catch (err) {
@@ -428,6 +438,8 @@ async function applyleave(req, res) {
   }
 }
 async function sendStatus(req, res) {
+ 
+    
   var Status = new status({
     employeeId: req.query.employeeid,
     to: req.body.to,
@@ -445,13 +457,15 @@ async function sendStatus(req, res) {
 
   try {
     doc =  Status.save();
-    addNotification(req.body.to,req.query.employeeid,"has sent the status",res)
+    emailNotification(req.body.to,req.query.employeeid,"has sent the status");
+    addNotification(req.body.to,req.query.employeeid,"has sent the status",res);
     return res.status(201).json(doc);
   }
   catch (err) {
     return res.status(501).json(err);
   }
-  
+    
+   
 }
 async function addNotification(to,from, message,res){
   var notify=new notifications({
@@ -470,37 +484,61 @@ async function addNotification(to,from, message,res){
   }
 }
 async function sendVerificationMail(req,res){
-  var a=req.body.email;
-  var nodemailer = require('nodemailer');
-   rand=Math.floor((Math.random() * 100) + 54);
-    host=req.body.email;
-   var arr = a.split("@").map(function (val) { return +val + 1; });
-    console.log(arr[0])
-    link="http://"+arr[0]+"/verify?id="+rand;
+  rand=Math.floor((Math.random() * 100) + 54);
+  host=req.body.email;
+  link="http://localhost:4200/verify/"+req.body.username+rand;
 
-var transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: 'sonal425chouhan@gmail.com',
-    pass: ''
-  }
-});
+  var mailOptions = {
+    from: 'schouhan@bestpeers.com',
+    to: 'schouhan@bestpeers.com',
+    subject : "Please confirm your Email account",
+    html : "Hello,<br> Please Click on the link to verify your email.<br><a href="+link+">Click here to verify</a>" 
+      
+  };
 
-var mailOptions = {
-  from: 'schouhan@bestpeers.com',
-  to: 'sonal425chouhan@gmail.com',
-  subject : "Please confirm your Email account",
-  html : "Hello,<br> Please Click on the link to verify your email.<br><a href="+link+">Click here to verify</a>" 
-    
-};
+  transporter.sendMail(mailOptions, function(error, info){
+    if (error) {
+      console.log(error);
+    } else {
+      console.log('Email sent: ' + info.response);
+    }
+  });
+}
+async function emailNotification(to,fromId,message,email){
 
-transporter.sendMail(mailOptions, function(error, info){
-  if (error) {
-    console.log(error);
-  } else {
-    console.log('Email sent: ' + info.response);
-  }
-});
+  var email,from;
+  var user = mongoose.model("User");
+  user.find({ '_id': to }, 'email', function(err, data){ 
+    if (err) return next(err);
+    email=data;  
+    });
+    user.find({ '_id': fromId}, 'name', function(err, data){ 
+    if (err) return next(err);
+    from=data;  
+    console.log(from[0].name)
+    mail( email[0].email,from[0].name,message);
+  });
+
+  
+
+}
+async function mail(email,from,message){
+  var mailOptions = {
+    from: 'schouhan@bestpeers.com',
+    to: 'schouhan@bestpeers.com',
+    subject : "new notification",
+    html: email+from+" "+message+" <br> Please Login to see the details"
+      
+  };
+
+  transporter.sendMail(mailOptions, function(error, info){
+    if (error) {
+      console.log(error);
+    } else {
+      console.log('Email sent: ' + info.response);
+    }
+  });
+
 }
 
 module.exports = router;

@@ -24,6 +24,7 @@ import {FilterArray } from './filter';
 import { LeaveComponent } from './leave/leave.component';
 import { LeaveApplicationComponent } from './leave-application/leave-application.component';
 import { MyStatusComponent } from './my-status/my-status.component';
+import { VerifyComponent } from './verify/verify.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { MyStatusComponent } from './my-status/my-status.component';
     FilterArray,
     LeaveComponent,
     LeaveApplicationComponent,
-    MyStatusComponent
+    MyStatusComponent,
+    VerifyComponent
   ],
   imports: [
     BrowserModule,

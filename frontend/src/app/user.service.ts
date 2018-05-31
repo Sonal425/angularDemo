@@ -192,4 +192,11 @@ export class UserService {
       headers:new HttpHeaders().append('Content-Type','application/json')
     });
   }
+  verifyEmail(token:any){
+    return this._http.get('http://127.0.0.1:3000/userApi/verifyEmail/'+token,{
+      observe:'body',
+      // withCredentials:true,
+      headers:new HttpHeaders().append('Content-Type','application/json')
+    });
+  }
 }

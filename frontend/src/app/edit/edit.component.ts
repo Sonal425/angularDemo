@@ -13,8 +13,8 @@ export class EditComponent implements OnInit {
   username:new FormControl(null,Validators.required),
   type:new FormControl(null, Validators.required)
   });
-  id:any;
-  user={};
+  id:string;
+  user:any={};
 
   constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute,private _user:UserService) { }
 

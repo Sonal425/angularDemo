@@ -9,11 +9,11 @@ import {FormGroup,FormControl,Validators,FormBuilder} from '@angular/forms';
   styleUrls: ['./employee.component.scss']
 })
 export class EmployeeComponent implements OnInit {
-  id:any;
+  id:string;
   project:any;
   applications:any;
-  show="no";
-  manager=[];
+  show:string="no";
+  manager:Array<any>=[];
   href:string;
   notifications:any;
   unreadNotifications:any;
